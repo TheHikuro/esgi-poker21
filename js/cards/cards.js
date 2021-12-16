@@ -16,37 +16,31 @@ const getDeckInfo = async (deck_id) => {
     });
 }
 
-const displayDeck = async (myDeck, deckFromHtml, deckCount) => {
-    getDeckInfo(myDeck).then(data => {
-        const deckPile = window.document.createElement('img');
-        const reShuffle = window.document.createElement('button');
-
+const checkDeck = async(myDeck, deckCount, deckPile, deckFromHtml, reShuffle) => {
+    const { remaining } = await getDeckInfo(myDeck);
+    if (myDeck && remaining >= 0) {
+        deckCount.innerHTML = remaining;
+    }
+    if (remaining > 0) {
         deckPile.src = '../assets/img/back_deck.png';
         deckFromHtml.appendChild(deckPile);
-        deckCount.innerHTML = data.remaining;
-        
-        deckPile.addEventListener('click', async () => {
-            await drawCardFromDeck(myDeck, 1);
-            getDeckInfo(myDeck).then(datas => {
-                if (myDeck && datas.remaining >= 0) {
-                    deckCount.innerHTML = datas.remaining;
-                }
-                if (datas.remaining > 0) {
-                    deckPile.src = '../assets/img/back_deck.png';
-                    deckFromHtml.appendChild(deckPile);
-                } else if (datas.remaining === 0) {
-                    deckPile.remove();
-                    deckCount.innerHTML = '0';
-                    reShuffle.innerHTML = 'Re-shuffle';
-                    deckFromHtml.appendChild(reShuffle);
-                    reShuffle.addEventListener('click', () => {
-                        // myDeck = getDeck();
-                        // displayDeck(myDeck, deckFromHtml, deckCount);
-                    })
-                }
-            })
-        })
-    });
+    } else if (remaining === 0) {
+        deckPile.remove();
+        deckCount.innerHTML = '0';
+        reShuffle.innerHTML = 'Re-shuffle';
+        deckFromHtml.appendChild(reShuffle);
+    }
+}
+
+const deckPileEvent = async (myDeck, deckCount, deckPile, deckFromHtml, reShuffle) => {
+    await drawCardFromDeck(myDeck, 1);
+    await checkDeck(myDeck, deckCount, deckPile, deckFromHtml, reShuffle);
+}
+
+const reShuffleEvent = async (reShuffle) => {
+    reShuffle.remove();
+    await getDeck();
+    await showDeck();
 }
 
 export const drawCardFromDeck = async (deck_id, number_cards) => {
@@ -61,9 +55,16 @@ export const drawCardFromDeck = async (deck_id, number_cards) => {
 
 export const showDeck = async () => {
     const myDeck = localStorage.getItem('deckId') ? localStorage.getItem('deckId') : await getDeck();
+
     const deckFromHtml = window.document.getElementById('deck');
     const deckCount = window.document.getElementById('deck-count');
 
-    await displayDeck(myDeck, deckFromHtml, deckCount);
+    const deckPile = window.document.createElement('img');
+    const reShuffle = window.document.createElement('button');
+    
+    checkDeck(myDeck, deckCount, deckPile, deckFromHtml, reShuffle)
+
+    deckPile.addEventListener('click', () => { deckPileEvent(myDeck, deckCount, deckPile, deckFromHtml, reShuffle) }, false);
+    reShuffle.addEventListener('click', () => { reShuffleEvent(reShuffle) }, false);
 }
 
