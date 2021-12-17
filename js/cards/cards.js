@@ -16,25 +16,33 @@ const getDeckInfo = async (deck_id) => {
     });
 }
 
-const checkDeck = async(myDeck, deckCount, deckPile, deckFromHtml, reShuffle) => {
+const checkDeck = async(myDeck, deckCount, deckPile, deckFromHtml, reShuffle, staticDeck) => {
     const { remaining } = await getDeckInfo(myDeck);
     if (myDeck && remaining >= 0) {
         deckCount.innerHTML = remaining;
     }
-    if (remaining > 0) {
-        deckPile.src = '../assets/img/back_deck.png';
-        deckFromHtml.appendChild(deckPile);
-    } else if (remaining === 0) {
-        deckPile.remove();
-        deckCount.innerHTML = '0';
-        reShuffle.innerHTML = 'Re-shuffle';
-        deckFromHtml.appendChild(reShuffle);
+    switch (remaining) {
+        case 0:
+            deckPile.remove();
+            deckCount.innerHTML = 'Plus de cartes dans le deck';
+            reShuffle.innerHTML = 'Re-shuffle';
+            deckFromHtml.appendChild(reShuffle);
+            break;
+        case 1:
+            staticDeck.remove();
+            break;
+        default:
+            deckPile.src = '../assets/img/back_deck.png';
+            staticDeck.src = '../assets/img/back_deck.png';
+            deckFromHtml.appendChild(deckPile);
+            deckFromHtml.appendChild(staticDeck);
+            break;
     }
 }
 
-const deckPileEvent = async (myDeck, deckCount, deckPile, deckFromHtml, reShuffle) => {
+const deckPileEvent = async (myDeck, deckCount, deckPile, deckFromHtml, reShuffle, staticDeck) => {
     await drawCardFromDeck(myDeck, 1);
-    await checkDeck(myDeck, deckCount, deckPile, deckFromHtml, reShuffle);
+    await checkDeck(myDeck, deckCount, deckPile, deckFromHtml, reShuffle, staticDeck);
 }
 
 const reShuffleEvent = async (reShuffle) => {
@@ -59,12 +67,15 @@ export const showDeck = async () => {
     const deckFromHtml = window.document.getElementById('deck');
     const deckCount = window.document.getElementById('deck-count');
 
+    const staticDeck = window.document.createElement('img');
+    staticDeck.id = 'absolute-back-deck';
     const deckPile = window.document.createElement('img');
+    deckPile.id = 'deck-pile';
     const reShuffle = window.document.createElement('button');
     
-    checkDeck(myDeck, deckCount, deckPile, deckFromHtml, reShuffle)
+    checkDeck(myDeck, deckCount, deckPile, deckFromHtml, reShuffle, staticDeck)
 
-    deckPile.addEventListener('click', () => { deckPileEvent(myDeck, deckCount, deckPile, deckFromHtml, reShuffle) }, false);
+    deckPile.addEventListener('click', () => { deckPileEvent(myDeck, deckCount, deckPile, deckFromHtml, reShuffle, staticDeck) }, false);
     reShuffle.addEventListener('click', () => { reShuffleEvent(reShuffle) }, false);
 }
 

@@ -87,12 +87,29 @@ html, body {
     height: 100%;
 }
 
-.deck > img{
+.deck > #deck-pile{
+    position: relative;
     width: 200px;
     height: 300px;
-    box-shadow: black 0px 0px 10px;
     cursor: pointer;
     border-radius: 5px;
+    z-index: 1;
+}
+
+#deck-pile:hover{
+    transform: rotate(5deg);
+    transition: ease-in-out 0.5s;
+    z-index: 2;
+}
+
+#absolute-back-deck{
+    box-shadow: black 0px 0px 10px;
+    position: absolute;
+    width: 200px;
+    height: 300px;
+    margin-left: 9px;
+    left: 0;
+    z-index: 0;
 }
 
 .deck-count {
