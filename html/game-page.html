@@ -4,11 +4,35 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="../css/poker.css">
+    <title>ESGI | Poker 21</title>
 </head>
 <body>
-    <div id='test'></div>
-    <button onclick="logout()">Se déconnecter</button>
+    <div class="main-container">
+        <div class="header-container">
+            <div class="username" onclick="logout()">
+                <div id="username"></div>
+                <div class="navbar">
+                    <div class="logout-svg">
+                        <img src="../assets/svg/logout.svg" alt="" id="logout-svg">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="body-container">
+            <div class="deck-container">
+                <div class="deck" id="deck"></div>
+                <div class="deck-count" id="deck-count"></div>
+            </div>
+            <div class="cards-container">
+                <div class="dealer-container"></div>
+                <div class="player-container"></div>
+            </div>
+            <div class="board-container">
+
+            </div>
+        </div>
+    </div>
 </body>
 <footer>
     <script src="../js/pokerIndex.js" type="module"></script>
