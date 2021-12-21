@@ -52,7 +52,7 @@ const createDeck = async () => {
     const { remaining } = await getDeckInfo(myDeck);
 
     for (let i = 0; i < remaining; i++) {
-        let card = await createElement('img', 'deck-pile');
+        let card = await createElement('img', null, ["card"]);
         card.src = '../assets/img/back.png';
         card.style.margin = `${i * -0.3}px 0 0 ${i * -0.2}px`;
         deckElement.append(card);
@@ -71,7 +71,9 @@ const cardEvent = async () => {
     await checkDeck();
 
     deckElement.removeChild(firstDeckCard);
+
     firstDeckCard.src = drawCard[0].image;
+    firstDeckCard.style = null;
 
     playerZone.appendChild(firstDeckCard);
 
