@@ -51,7 +51,7 @@ const createDeck = async () => {
 
     for (let i = 0; i < remaining; i++) {
         card = await createElement('img', 'deck-pile');
-        card.src = '../assets/img/back_deck.png';
+        card.src = '../assets/img/back.png';
         card.style.margin = `${i * -0.3}px 0 0 ${i * -0.2}px`;
         deckElement.append(card);
         deckAnimation(card, 'generate-deck-pile', `${i / remaining}s`);

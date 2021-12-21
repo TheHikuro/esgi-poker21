@@ -1,168 +1,170 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap");
 
-html, body {
-    height: 100vh;
-    margin: 0;
-    font-family: 'Montserrat', sans-serif;
+:root {
+    --shadow-card: 0 1px 1px rgb(0 0 0 / 15%);
 }
 
-.main-container{
-    display: flex;
-    height: 100vh;
-    background: url("../assets/img/green-bg.jpeg") no-repeat center center fixed;
-    background-size: cover;
-    flex-direction: column;
+html,
+body {
+  height: 100vh;
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+}
+
+.main-container {
+  display: flex;
+  height: 100vh;
+  background-color: #45a173;
+  flex-direction: column;
 }
 
 .header-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: end;
-    width: 100%;
-    height: 5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+  width: 100%;
+  height: 5rem;
 }
 
-.navbar{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.navbar > .logout-svg > #logout-svg{
-    display: none;
-    margin-left: 10px;
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .navbar > .logout-svg > #logout-svg {
-    width: 25px;
-    align-items: center;
+  display: none;
+  margin-left: 10px;
 }
 
-.username:hover > .navbar > .logout-svg > #logout-svg{
-    display: block;
-    margin-left: 10px;
+.navbar > .logout-svg > #logout-svg {
+  width: 25px;
+  align-items: center;
+}
+
+.username:hover > .navbar > .logout-svg > #logout-svg {
+  display: block;
+  margin-left: 10px;
 }
 
 .username {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    height: 3rem;
-    width: 20vh;
-    background: rgba(255, 255, 255, 0.623);
-    cursor: pointer;
-    border: transparent;
-    border-radius: 5px;
-    padding: 3px;
-    font-size: 1.5rem;
-    margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  height: 3rem;
+  width: 20vh;
+  background: rgba(255, 255, 255, 0.623);
+  cursor: pointer;
+  border: transparent;
+  border-radius: 5px;
+  padding: 3px;
+  font-size: 1.5rem;
+  margin-right: 1rem;
 }
 
 .username > span {
-    height: 2rem;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    color: black;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  color: black;
 }
 
 .body-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 100%;
 }
 
 .deck-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: end;
-    width: 15%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+  width: 15%;
+  height: 100%;
 }
 
 @keyframes generate-deck-pile {
     0% {
-        transform: translate(-3em, -20em)
+        transform: translateY(-200%) rotate(140deg);
     }
     100% {
-        transform: translate(0em)
+        transform: translateY(0);
     }
 }
-    
-.deck > #deck-pile{
-    position: absolute;
-    left: 2rem;
-    top: 40%;
-    width: 150px;
-    height: 200px;
-    cursor: pointer;
-    border-radius: 5px;
-    z-index: 1;
-}
 
-#deck-pile:hover{
-    transform: translate(0, -10px);
-    transition: ease-in-out 0.5s;
-    z-index: 2;
+.deck > #deck-pile {
+  position: absolute;
+  background-color: #fff;
+  box-shadow: var(--shadow-card);
+  left: 3rem;
+  top: 40%;
+  width: 150px;
+  height: 200px;
+  cursor: pointer;
+  border-radius: 10px;
+  z-index: 1;
 }
 
 .deck-count {
-    font-size: 2rem;
-    color: #fff;
+  font-size: 2rem;
+  color: #fff;
 }
 
 .cards-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 70%;
-    height: 100%;
-    background: rgba(245, 240, 240, 0.336);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 70%;
+  height: 100%;
+  background: rgba(245, 240, 240, 0.336);
 }
 
 .dealer-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 50%;
-    background: rgba(29, 78, 238, 0.336);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50%;
+  background: rgba(29, 78, 238, 0.336);
 }
 
-.player-container{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 50%;
-    background: rgba(180, 243, 6, 0.336);
+.player-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50%;
+  background: rgba(180, 243, 6, 0.336);
 }
 
 #player-card {
-    width: 150px;
-    height: 200px;
-    border-radius: 5px;
-    box-shadow: black 0px 0px 10px;
-    margin-right: 5px;
-    cursor: pointer;
+  width: 150px;
+  height: 200px;
+  border-radius: 5px;
+  box-shadow: var(--shadow-card);
+  margin-right: 5px;
+  cursor: pointer;
+  background-size: cover;
+  background-position: center;
 }
 
 .board-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 15%;
-    height: 100%;
-    background: rgba(245, 30, 30, 0.336);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 15%;
+  height: 100%;
+  background: rgba(245, 30, 30, 0.336);
 }
