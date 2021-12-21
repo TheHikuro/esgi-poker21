@@ -2,7 +2,7 @@ import { createElement } from './generic/index.js';
 import { getDeck, getDeckInfo, drawCardFromDeck
 } from '../api/index.js';
 
-let card = null;
+let firstDeckCard = null;
 let reShuffle = null;
 let playerCard = null;
 let myDeck = localStorage.getItem('deckId') ? localStorage.getItem('deckId') : await getDeck();
@@ -28,7 +28,7 @@ const checkDeck = async () => {
             deckCountElement.appendChild(reShuffle);
             break;
         default:
-            await card.addEventListener('click', cardEvent, false);
+            await firstDeckCard.addEventListener('click', cardEvent, false);
             break;
     }
 };
@@ -43,34 +43,42 @@ const deckAnimation = (element, nameKeyFrame, time) => {
 }
 
 const shuffleDeckAnimation = () => {
-    
+    deckElement.childNodes.forEach(card => {
+        //do something
+    });
 }
 
 const createDeck = async () => {
     const { remaining } = await getDeckInfo(myDeck);
 
     for (let i = 0; i < remaining; i++) {
-        card = await createElement('img', 'deck-pile');
-        card.src = '../assets/img/back_deck.png';
+        let card = await createElement('img', 'deck-pile');
+        card.src = '../assets/img/back.png';
         card.style.margin = `${i * -0.3}px 0 0 ${i * -0.2}px`;
         deckElement.append(card);
         deckAnimation(card, 'generate-deck-pile', `${i / remaining}s`);
     }
+
+    firstDeckCard = deckElement.lastChild;
+
     isDeckCreated = true;
     showDeck();
 }
 
 const cardEvent = async () => {
-    card.removeEventListener('click', cardEvent, false);
-    playerCard = createElement('img', 'player-card');
+    firstDeckCard.removeEventListener('click', cardEvent, false);
     const drawCard = await drawCardFromDeck(myDeck, 1);
-    // await drawCardFromDeck(myDeck, 1);
     await checkDeck();
-    playerCard.src = drawCard[0].image;
-    // playerCard.src = '../assets/img/back_deck.png';
-    playerZone.append(playerCard);
-    deckElement.removeChild(deckElement.lastChild); // la dépacler ?
-    deckElement.lastChild.addEventListener('click', cardEvent, false);
+
+    deckElement.removeChild(firstDeckCard);
+    firstDeckCard.src = drawCard[0].image;
+
+    playerZone.appendChild(firstDeckCard);
+
+    if(deckElement.lastChild){
+        firstDeckCard = deckElement.lastChild;
+        firstDeckCard.addEventListener('click', cardEvent, false);
+    }
 }
 
 const reShuffleEvent = async () => {
