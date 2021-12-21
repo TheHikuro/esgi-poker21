@@ -33,13 +33,17 @@ const checkDeck = async () => {
     }
 };
 
-const animationDeck = (element, nameKeyFrame, time) => {
+const deckAnimation = (element, nameKeyFrame, time) => {
     requestAnimationFrame(() => {
         element.style.animationName = nameKeyFrame;
         element.style.animationDuration = time;
         element.style.animationTimingFunction = 'ease-in-out';
         element.style.animationFillMode = 'forwards';
     });
+}
+
+const shuffleDeckAnimation = () => {
+    
 }
 
 const createDeck = async () => {
@@ -50,7 +54,7 @@ const createDeck = async () => {
         card.src = '../assets/img/back_deck.png';
         card.style.margin = `${i * -0.3}px 0 0 ${i * -0.2}px`;
         deckElement.append(card);
-        animationDeck(card, 'generate-deck-pile', `${i * 0,1}s`);
+        deckAnimation(card, 'generate-deck-pile', `${i / remaining}s`);
     }
     isDeckCreated = true;
     showDeck();
@@ -65,8 +69,8 @@ const cardEvent = async () => {
     playerCard.src = drawCard[0].image;
     // playerCard.src = '../assets/img/back_deck.png';
     playerZone.append(playerCard);
-    deckElement.removeChild(deckElement.firstChild);
-    card.addEventListener('click', cardEvent, false);
+    deckElement.removeChild(deckElement.lastChild); // la dépacler ?
+    deckElement.lastChild.addEventListener('click', cardEvent, false);
 }
 
 const reShuffleEvent = async () => {

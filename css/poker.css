@@ -89,10 +89,10 @@ html, body {
 
 @keyframes generate-deck-pile {
     0% {
-        transform: translate(0em, -14em);
+        transform: translate(-3em, -20em)
     }
     100% {
-        transform: translate(0em, 0em);
+        transform: translate(0em)
     }
 }
     
