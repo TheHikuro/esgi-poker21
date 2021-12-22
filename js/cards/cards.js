@@ -52,8 +52,15 @@ const createDeck = async () => {
     const { remaining } = await getDeckInfo(myDeck);
 
     for (let i = 0; i < remaining; i++) {
-        let card = await createElement('img', null, ["card"]);
-        card.src = '../assets/img/back.png';
+        let card = await createElement('div', null, ["card"]);
+        let card_inner = createElement('div', null, ["card-inner"]);
+        let card_back = createElement('img', null, ["card-back"]);
+        let card_front = createElement('img', null, ["card-front"]);
+
+        card.append(card_inner);
+        card_inner.append(card_back, card_front);
+        card_back.src = '../assets/img/back.png';
+        
         card.style.margin = `${i * -0.3}px 0 0 ${i * -0.2}px`;
         deckElement.append(card);
         deckAnimation(card, 'generate-deck-pile', `${i / remaining}s`);
@@ -72,10 +79,14 @@ const cardEvent = async () => {
 
     deckElement.removeChild(firstDeckCard);
 
-    firstDeckCard.src = drawCard[0].image;
+    let car_inner = firstDeckCard.querySelector('.card-inner');
+    let card_front = car_inner.querySelector('.card-front');
+
+    card_front.src =  drawCard[0].image;
     firstDeckCard.style = null;
 
     playerZone.appendChild(firstDeckCard);
+    deckAnimation(car_inner, 'card-return', `1s`);
 
     if(deckElement.lastChild){
         firstDeckCard = deckElement.lastChild;
