@@ -1,4 +1,4 @@
-import { createElement, getCardValues } from './generic/index.js';
+import { createElement, deckAnimation, shuffleDeckAnimation, distributeAnimation, getCardValues} from './generic/index.js';
 import { getDeck, getDeckInfo, drawCardFromDeck
 } from '../api/index.js';
 
@@ -33,21 +33,6 @@ const checkDeck = async () => {
     }
 };
 
-const deckAnimation = (element, nameKeyFrame, time) => {
-    requestAnimationFrame(() => {
-        element.style.animationName = nameKeyFrame;
-        element.style.animationDuration = time;
-        element.style.animationTimingFunction = 'ease-in-out';
-        element.style.animationFillMode = 'forwards';
-    });
-}
-
-const shuffleDeckAnimation = () => {
-    deckElement.childNodes.forEach(card => {
-        //do something
-    });
-}
-
 const createDeck = async () => {
     const { remaining } = await getDeckInfo(myDeck);
 
@@ -76,12 +61,11 @@ const cardEvent = async () => {
     firstDeckCard.removeEventListener('click', cardEvent, false);
     window.document.removeEventListener('keydown', onKeyDownEvent, false);
 
+    const clonedFirstDeckCard = firstDeckCard.cloneNode(true);
     const drawCard = await drawCardFromDeck(myDeck, 1);
     const cardValues = getCardValues(drawCard[0].code);
 
     await checkDeck();
-
-    deckElement.removeChild(firstDeckCard);
 
     let car_inner = firstDeckCard.querySelector('.card-inner');
     let card_front = car_inner.querySelector('.card-front');
@@ -89,8 +73,12 @@ const cardEvent = async () => {
     card_front.src =  drawCard[0].image;
     firstDeckCard.style = null;
 
+    deckElement.appendChild(clonedFirstDeckCard);
     playerZone.appendChild(firstDeckCard);
-    deckAnimation(car_inner, 'card-return', `1s`);
+
+    distributeAnimation(clonedFirstDeckCard, firstDeckCard);
+    
+    // deckAnimation(car_inner, 'card-return', `1s`);
     firstDeckCard.removeEventListener('click', cardEvent, false);
 
     if(deckElement.lastChild){

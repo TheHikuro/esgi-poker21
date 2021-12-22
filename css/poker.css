@@ -109,6 +109,15 @@ body {
   }
 }
 
+/* @keyframes distribute-cards {
+  0% {
+      transform: translate(-49em, -140%);
+  }
+  100% {
+      transform: translateY(0);
+  }
+} */
+
 .card {
     background-color: transparent;
     width: 150px;
