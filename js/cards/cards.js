@@ -74,6 +74,8 @@ const createDeck = async () => {
 
 const cardEvent = async () => {
     firstDeckCard.removeEventListener('click', cardEvent, false);
+    window.document.removeEventListener('keydown', onKeyDownEvent, false);
+
     const drawCard = await drawCardFromDeck(myDeck, 1);
     const cardValues = getCardValues(drawCard[0].code);
 
@@ -89,11 +91,15 @@ const cardEvent = async () => {
 
     playerZone.appendChild(firstDeckCard);
     deckAnimation(car_inner, 'card-return', `1s`);
+    firstDeckCard.removeEventListener('click', cardEvent, false);
 
     if(deckElement.lastChild){
         firstDeckCard = deckElement.lastChild;
         firstDeckCard.addEventListener('click', cardEvent, false);
     }
+    setTimeout(() => {
+        window.document.addEventListener('keydown', onKeyDownEvent, false);
+    }, 500)
 }
 
 const reShuffleEvent = async () => {
@@ -108,6 +114,27 @@ const reShuffleEvent = async () => {
     reShuffle.addEventListener('click', reShuffleEvent, false);
 }
 
+const onKeyDownEvent = async (e) => {
+    if (isDeckCreated) {
+        switch (e.keyCode) {
+            case 68: // d
+                await cardEvent();
+                break;
+            case 83: // s
+                console.log('Stand');
+                break; 
+            case 67: // c
+                console.log('Cancel draw card event');
+                break;
+            case 82: // r
+                await reShuffleEvent();
+                break;
+            default:
+                break;
+        }
+    } 
+}
+
 export const showDeck = async () => {
 
     switch (isDeckCreated) {
@@ -120,6 +147,6 @@ export const showDeck = async () => {
         default:
             break;
     }
-    
-}
 
+    window.document.addEventListener('keydown', onKeyDownEvent, false);
+}
