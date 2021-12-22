@@ -1,4 +1,4 @@
-import { createElement } from './generic/index.js';
+import { createElement, getCardValues } from './generic/index.js';
 import { getDeck, getDeckInfo, drawCardFromDeck
 } from '../api/index.js';
 
@@ -75,6 +75,8 @@ const createDeck = async () => {
 const cardEvent = async () => {
     firstDeckCard.removeEventListener('click', cardEvent, false);
     const drawCard = await drawCardFromDeck(myDeck, 1);
+    const cardValues = getCardValues(drawCard[0].code);
+
     await checkDeck();
 
     deckElement.removeChild(firstDeckCard);
