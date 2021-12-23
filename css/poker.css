@@ -2,6 +2,7 @@
 
 :root {
     --shadow-card: 0 1px 1px rgb(0 0 0 / 15%);
+    --shadow-btn: 0 1px 1px rgba(0, 0, 0, 0.699);
 }
 
 html,
@@ -71,6 +72,27 @@ body {
   flex-direction: column;
   align-items: center;
   color: black;
+}
+
+.btn {
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 45px;
+  margin: 0 0 2em;
+  max-width: 160px;
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  width: 100%;
+  border-radius: 5px;
+  border: transparent;
+  box-shadow: var(--shadow-btn);
+}
+
+.btn:hover {
+  box-shadow: var(--shadow-card);
 }
 
 .body-container {
@@ -179,6 +201,11 @@ body {
 .deck-count {
   font-size: 2rem;
   color: #fff;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: center;
+  height: 30vh;
 }
 
 .cards-container {
@@ -239,6 +266,10 @@ body {
         align-items: center;
         font-size: 1rem;
         padding: 1px;
+    }
+
+    .btn {
+      margin: 0 1em 2em;
     }
     
     .body-container {

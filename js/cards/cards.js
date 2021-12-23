@@ -11,6 +11,7 @@ let isDeckCreated = false;
 const playerZone = window.document.getElementById('player-container');
 const deckElement = window.document.getElementById('deck');
 const deckCountElement = window.document.getElementById('deck-count');
+// const DealerZone = window.document.getElementById('dealer-container');
 
 const checkDeck = async () => {
     const { remaining } = await getDeckInfo(myDeck);
@@ -21,8 +22,8 @@ const checkDeck = async () => {
 
     switch (remaining) {
         case 0:
-            reShuffle = createElement('button', 're-shuffle');
-            reShuffle.innerHTML = 'Re-shuffle';
+            reShuffle = createElement('button', 're-shuffle', ['btn']);
+            reShuffle.innerHTML = 'Shuffle Deck';
             reShuffle.addEventListener('click', reShuffleEvent, false);
             deckCountElement.innerHTML = 'Plus de cartes dans le deck';
             deckCountElement.appendChild(reShuffle);
@@ -72,6 +73,8 @@ const playerDeckFlipCardEvent = async () => {
     card_front.src =  drawCard[0].image;
 
     flipCardAnimation(card_inner, `500ms`);
+
+    window.document.addEventListener('keydown', onKeyDownEvent, false);
 }
 
 const returnCardToDeck = async () => {
@@ -86,6 +89,7 @@ const returnCardToDeck = async () => {
         card_inner.style.top = null;
         card_inner.style.left = null;
         card.addEventListener('click', cardEvent, false);
+        window.document.addEventListener('keydown', onKeyDownEvent, false);
         firstDeckCard = card;
     }, 500);
 }
