@@ -100,24 +100,6 @@ body {
     }
 }
 
-@keyframes card-return {
-  0% {
-      transform: rotateY(0deg);
-  }
-  100% {
-      transform: rotateY(180deg);
-  }
-}
-
-/* @keyframes distribute-cards {
-  0% {
-      transform: translate(-49em, -140%);
-  }
-  100% {
-      transform: translateY(0);
-  }
-} */
-
 .card {
     background-color: transparent;
     width: 150px;

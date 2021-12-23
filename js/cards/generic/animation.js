@@ -13,19 +13,15 @@ export const shuffleDeckAnimation = () => {
     });
 }
 
-export const distributeAnimation = (clonedFirstDeckCard, firstDeckCard) => {
-    let cardInitialPosition = {
-        x: clonedFirstDeckCard.offsetLeft,
-        y: clonedFirstDeckCard.offsetTop
-    };
+export const distributeAnimation = (moveElement, oldRect, newRect, time) => {
+    let finalLeft = oldRect.left - newRect.left;
+    let finalTop = oldRect.top - newRect.top;
 
-    let cardFinalPosition = {
-        x: firstDeckCard.offsetLeft,
-        y: firstDeckCard.offsetTop
-    };
+    moveElement.style.left = `${finalLeft}px`;
+    moveElement.style.top = `${finalTop}px`;
 
-    requestAnimationFrame(() => {
-        clonedFirstDeckCard.style.transform = `translate(${cardFinalPosition.x - cardInitialPosition.x}px, ${cardFinalPosition.y - cardInitialPosition.y}px)`;
-        clonedFirstDeckCard.style.transition = 'transform 0.3s ease-in-out';
-    });
+    moveElement.style.animationTimingFunction = 'ease-in-out';
+    moveElement.style.animationFillMode = 'forwards';
+    moveElement.style.transform = `translate(${-finalLeft}px, ${-finalTop}px) rotateY(180deg)`;
+    moveElement.style.transition =  `all ${time} ease-in-out`;
 }

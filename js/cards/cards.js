@@ -61,25 +61,23 @@ const cardEvent = async () => {
     firstDeckCard.removeEventListener('click', cardEvent, false);
     window.document.removeEventListener('keydown', onKeyDownEvent, false);
 
-    const clonedFirstDeckCard = firstDeckCard.cloneNode(true);
     const drawCard = await drawCardFromDeck(myDeck, 1);
     const cardValues = getCardValues(drawCard[0].code);
 
     await checkDeck();
 
-    let car_inner = firstDeckCard.querySelector('.card-inner');
-    let card_front = car_inner.querySelector('.card-front');
+    let card_inner = firstDeckCard.querySelector('.card-inner');
+    let card_front = card_inner.querySelector('.card-front');
 
     card_front.src =  drawCard[0].image;
     firstDeckCard.style = null;
 
-    deckElement.appendChild(clonedFirstDeckCard);
+    let oldRect = firstDeckCard.getBoundingClientRect();
     playerZone.appendChild(firstDeckCard);
-
-    distributeAnimation(clonedFirstDeckCard, firstDeckCard);
-    
-    // deckAnimation(car_inner, 'card-return', `1s`);
     firstDeckCard.removeEventListener('click', cardEvent, false);
+    let newRect = firstDeckCard.getBoundingClientRect();
+
+    distributeAnimation(card_inner, oldRect, newRect, `1s`);
 
     if(deckElement.lastChild){
         firstDeckCard = deckElement.lastChild;
