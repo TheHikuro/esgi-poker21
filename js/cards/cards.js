@@ -1,4 +1,4 @@
-import { createElement, deckAnimation, shuffleDeckAnimation, distributeAnimation, getCardValues} from './generic/index.js';
+import { createElement, deckAnimation, shuffleDeckAnimation, distributeAnimation, flipCardAnimation, getCardValues} from './generic/index.js';
 import { getDeck, getDeckInfo, drawCardFromDeck
 } from '../api/index.js';
 
@@ -57,35 +57,59 @@ const createDeck = async () => {
     showDeck();
 }
 
-const cardEvent = async () => {
-    firstDeckCard.removeEventListener('click', cardEvent, false);
+const playerDeckFlipCardEvent = async () => {
+    playerZone.lastChild.removeEventListener('click', playerDeckFlipCardEvent, false);
     window.document.removeEventListener('keydown', onKeyDownEvent, false);
+
+    let card_inner = playerZone.lastChild.querySelector('.card-inner');
+    let card_front = card_inner.querySelector('.card-front');
 
     const drawCard = await drawCardFromDeck(myDeck, 1);
     const cardValues = getCardValues(drawCard[0].code);
 
     await checkDeck();
 
-    let card_inner = firstDeckCard.querySelector('.card-inner');
-    let card_front = card_inner.querySelector('.card-front');
-
     card_front.src =  drawCard[0].image;
-    firstDeckCard.style = null;
+
+    flipCardAnimation(card_inner, `500ms`);
+}
+
+const returnCardToDeck = async () => {
+    playerZone.lastChild.removeEventListener('click', returnCardToDeck, false);
+    window.document.removeEventListener('keydown', onKeyDownEvent, false);
+    
+    let card = playerZone.lastChild;
+    let card_inner = card.querySelector('.card-inner');
+    card_inner.style.transform = null;
+    window.setTimeout(() => {
+        deckElement.append(card);
+        card_inner.style.top = null;
+        card_inner.style.left = null;
+        card.addEventListener('click', cardEvent, false);
+        firstDeckCard = card;
+    }, 500);
+}
+
+const cardEvent = async () => {
+    firstDeckCard.removeEventListener('click', cardEvent, false);
+    window.document.removeEventListener('keydown', onKeyDownEvent, false);
+
+    let card_inner = firstDeckCard.querySelector('.card-inner');
+
+    firstDeckCard.style['animation-name'] = null;
 
     let oldRect = firstDeckCard.getBoundingClientRect();
     playerZone.appendChild(firstDeckCard);
-    firstDeckCard.removeEventListener('click', cardEvent, false);
     let newRect = firstDeckCard.getBoundingClientRect();
 
-    distributeAnimation(card_inner, oldRect, newRect, `1s`);
+    distributeAnimation(card_inner, oldRect, newRect, `500ms`);
+    
+    window.setTimeout(()=> {
+        playerZone.lastChild.addEventListener('click', playerDeckFlipCardEvent, false);
+        // .addEventListener('click', returnCardToDeck, false); //add event to return button
+    }, 500);
 
-    if(deckElement.lastChild){
-        firstDeckCard = deckElement.lastChild;
-        firstDeckCard.addEventListener('click', cardEvent, false);
-    }
-    setTimeout(() => {
-        window.document.addEventListener('keydown', onKeyDownEvent, false);
-    }, 500)
+    firstDeckCard = deckElement.lastChild;
 }
 
 const reShuffleEvent = async () => {

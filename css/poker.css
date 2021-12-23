@@ -170,7 +170,7 @@ body {
 } */
 
 .player-container .card {
-    margin-right: 5px;
+    margin: 0px 0px 0px 5px !important;
     cursor: pointer;
     background-size: cover;
     background-position: center;

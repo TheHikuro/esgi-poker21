@@ -22,6 +22,13 @@ export const distributeAnimation = (moveElement, oldRect, newRect, time) => {
 
     moveElement.style.animationTimingFunction = 'ease-in-out';
     moveElement.style.animationFillMode = 'forwards';
-    moveElement.style.transform = `translate(${-finalLeft}px, ${-finalTop}px) rotateY(180deg)`;
+    moveElement.style.transform = `translate(${-finalLeft}px, ${-finalTop}px)`;
     moveElement.style.transition =  `all ${time} ease-in-out`;
+}
+
+export const flipCardAnimation = (card, time) => {
+    card.style.animationTimingFunction = 'ease-in-out';
+    card.style.animationFillMode = 'forwards';
+    card.style.transform = `translate(${-parseFloat(card.style.left)}px, ${-parseFloat(card.style.top)}px) rotateY(180deg)`;
+    card.style.transition =  `all ${time}`;
 }
