@@ -11,6 +11,7 @@ let isDeckCreated = false;
 const playerZone = window.document.getElementById('player-container');
 const deckElement = window.document.getElementById('deck');
 const deckCountElement = window.document.getElementById('deck-count');
+// const DealerZone = window.document.getElementById('dealer-container');
 
 const checkDeck = async () => {
     const { remaining } = await getDeckInfo(myDeck);
@@ -21,8 +22,8 @@ const checkDeck = async () => {
 
     switch (remaining) {
         case 0:
-            reShuffle = createElement('button', 're-shuffle');
-            reShuffle.innerHTML = 'Re-shuffle';
+            reShuffle = createElement('button', 're-shuffle', ['btn']);
+            reShuffle.innerHTML = 'Shuffle Deck';
             reShuffle.addEventListener('click', reShuffleEvent, false);
             deckCountElement.innerHTML = 'Plus de cartes dans le deck';
             deckCountElement.appendChild(reShuffle);
@@ -65,27 +66,19 @@ const cardEvent = async () => {
     const cardValues = getCardValues(drawCard[0].code);
 
     await checkDeck();
-    let firstDeckCardPosition = {
-        x: firstDeckCard.offsetLeft,
-        y: firstDeckCard.offsetTop
-    };
 
-    let car_inner = firstDeckCard.querySelector('.card-inner');
-    let card_front = car_inner.querySelector('.card-front');
+    let card_inner = firstDeckCard.querySelector('.card-inner');
+    let card_front = card_inner.querySelector('.card-front');
 
     card_front.src =  drawCard[0].image;
     firstDeckCard.style = null;
 
+    let oldRect = firstDeckCard.getBoundingClientRect();
     playerZone.appendChild(firstDeckCard);
-    let newPositionFirstDeckCard = {
-        x: firstDeckCard.offsetLeft,
-        y: firstDeckCard.offsetTop
-    };
-    const firstPlayerCard = playerZone.lastElementChild;
-    distributeAnimation(firstDeckCardPosition, newPositionFirstDeckCard, firstPlayerCard);
-    
-    // deckAnimation(car_inner, 'card-return', `1s`);
     firstDeckCard.removeEventListener('click', cardEvent, false);
+    let newRect = firstDeckCard.getBoundingClientRect();
+
+    distributeAnimation(card_inner, oldRect, newRect, `500ms`);
 
     if(deckElement.lastChild){
         firstDeckCard = deckElement.lastChild;

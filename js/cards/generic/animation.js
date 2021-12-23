@@ -13,11 +13,15 @@ export const shuffleDeckAnimation = () => {
     });
 }
 
-export const distributeAnimation = (initPosition, firstPosition, cardElement) => {
-    cardElement.style.top = `${initPosition.y}px`;
-    cardElement.style.left = `${initPosition.x}px`;
-    requestAnimationFrame(() => {
-        cardElement.style.transform = `translate(${firstPosition.x - initPosition.x}px, ${firstPosition.y - initPosition.y}px)`;
-        cardElement.style.transition = 'transform 0.3s ease-in-out';
-    });
+export const distributeAnimation = (moveElement, oldRect, newRect, time) => {
+    let finalLeft = oldRect.left - newRect.left;
+    let finalTop = oldRect.top - newRect.top;
+
+    moveElement.style.left = `${finalLeft}px`;
+    moveElement.style.top = `${finalTop}px`;
+
+    moveElement.style.animationTimingFunction = 'ease-in-out';
+    moveElement.style.animationFillMode = 'forwards';
+    moveElement.style.transform = `translate(${-finalLeft}px, ${-finalTop}px) rotateY(180deg)`;
+    moveElement.style.transition =  `all ${time} ease-in-out`;
 }
