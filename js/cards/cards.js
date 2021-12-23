@@ -80,6 +80,9 @@ const playerDeckFlipCardEvent = async () => {
 const returnCardToDeck = async () => {
     playerZone.lastChild.removeEventListener('click', returnCardToDeck, false);
     window.document.removeEventListener('keydown', onKeyDownEvent, false);
+
+    const { remaining } = await getDeckInfo(myDeck);
+    deckCountElement.innerHTML = remaining;
     
     let card = playerZone.lastChild;
     let card_inner = card.querySelector('.card-inner');
@@ -98,6 +101,9 @@ const cardEvent = async () => {
     firstDeckCard.removeEventListener('click', cardEvent, false);
     window.document.removeEventListener('keydown', onKeyDownEvent, false);
 
+    const { remaining } = await getDeckInfo(myDeck);
+    deckCountElement.innerHTML = remaining - 1;
+
     let card_inner = firstDeckCard.querySelector('.card-inner');
 
     firstDeckCard.style['animation-name'] = null;
@@ -110,7 +116,7 @@ const cardEvent = async () => {
     
     window.setTimeout(()=> {
         playerZone.lastChild.addEventListener('click', playerDeckFlipCardEvent, false);
-        // .addEventListener('click', returnCardToDeck, false); //add event to return button
+        //.addEventListener('click', returnCardToDeck, false); //add event to return button
     }, 500);
 
     firstDeckCard = deckElement.lastChild;
