@@ -34,7 +34,7 @@ const checkDeck = async () => {
     }
 };
 
-const createDeck = async () => {
+export const createDeck = async () => {
     const { remaining } = await getDeckInfo(myDeck);
 
     for (let i = 0; i < remaining; i++) {
@@ -74,7 +74,9 @@ const playerDeckFlipCardEvent = async () => {
 
     flipCardAnimation(card_inner, `500ms`);
 
-    window.document.addEventListener('keydown', onKeyDownEvent, false);
+    window.setTimeout(() => {
+        window.document.addEventListener('keydown', onKeyDownEvent, false);
+    } , 500);
 }
 
 const returnCardToDeck = async () => {
@@ -116,7 +118,7 @@ const cardEvent = async () => {
     
     window.setTimeout(()=> {
         playerZone.lastChild.addEventListener('click', playerDeckFlipCardEvent, false);
-        //.addEventListener('click', returnCardToDeck, false); //add event to return button
+        window.document.addEventListener('keydown', onKeyDownEvent, false) //add event to return button
     }, 500);
 
     firstDeckCard = deckElement.lastChild;
@@ -144,11 +146,15 @@ const onKeyDownEvent = async (e) => {
                 console.log('Stand');
                 break; 
             case 67: // c
-                console.log('Cancel draw card event');
+                await returnCardToDeck();
                 break;
             case 82: // r
                 await reShuffleEvent();
                 break;
+            // case 32: // space
+            //     await cardEvent();
+            //     await playerDeckFlipCardEvent();
+            //     break;
             default:
                 break;
         }
