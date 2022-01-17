@@ -1,2 +1,2 @@
-export * from './blackjack.js';
-export * from './buttons.js';
+export * as game from './game.js';
+export * as navbar from './navbar.js'
