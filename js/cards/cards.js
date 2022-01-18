@@ -1,6 +1,5 @@
 import { createElement, deckAnimation, shuffleDeckAnimation, distributeAnimation, flipCardAnimation, getCardValues} from './generic/index.js';
-import { getDeck, getDeckInfo, drawCardFromDeck
-} from '../api/index.js';
+import { api } from '../api/index.js';
 import { game, navbar } from '../game/index.js';
 
 let firstDeckCard = null;
@@ -15,7 +14,7 @@ const deckCountElement = window.document.getElementById('deck-count');
 const DealerZone = window.document.getElementById('dealer-container');
 
 const checkDeck = async () => {
-    const { remaining } = await getDeckInfo(myDeck);
+    const { remaining } = await api.getDeckInfo(myDeck);
 
     if (myDeck && remaining >= 0) {
         deckCountElement.innerHTML = remaining;
@@ -38,7 +37,7 @@ const checkDeck = async () => {
 };
 
 export const createDeck = async () => {
-    const { remaining } = await getDeckInfo(myDeck);
+    const { remaining } = await api.getDeckInfo(myDeck);
 
     for (let i = 0; i < remaining; i++) {
         let card = await createElement('div', null, ["card"]);
@@ -68,7 +67,7 @@ const playerDeckFlipCardEvent = async () => {
     let card_inner = playerZone.lastChild.querySelector('.card-inner');
     let card_front = card_inner.querySelector('.card-front');
 
-    const drawCard = await drawCardFromDeck(myDeck, 1);
+    const drawCard = await api.drawCardFromDeck(myDeck, 1);
     const cardValues = getCardValues(drawCard[0].code);
 
     await checkDeck();
@@ -86,7 +85,7 @@ const returnCardToDeck = async () => {
     playerZone.lastChild.removeEventListener('click', returnCardToDeck, false);
     window.document.removeEventListener('keydown', onKeyDownEvent, false);
 
-    const { remaining } = await getDeckInfo(myDeck);
+    const { remaining } = await api.getDeckInfo(myDeck);
     deckCountElement.innerHTML = remaining;
     
     let card = playerZone.lastChild;
@@ -106,7 +105,7 @@ const cardEvent = async () => {
     firstDeckCard.removeEventListener('click', cardEvent, false);
     window.document.removeEventListener('keydown', onKeyDownEvent, false);
 
-    const { remaining } = await getDeckInfo(myDeck);
+    const { remaining } = await api.getDeckInfo(myDeck);
     deckCountElement.innerHTML = remaining - 1;
 
     let card_inner = firstDeckCard.querySelector('.card-inner');
@@ -134,7 +133,7 @@ const reShuffleEvent = async () => {
         playerZone.removeChild(playerZone.lastElementChild);
     }
     isDeckCreated = false;
-    myDeck = await getDeck();
+    myDeck = await api.getDeck();
     await showDeck();
     reShuffle.addEventListener('click', reShuffleEvent, false);
 }
@@ -169,7 +168,7 @@ export const showDeck = async () => {
     switch (isDeckCreated) {
         case false:
             if(!myDeck){
-                myDeck = await getDeck();
+                myDeck = await api.getDeck();
             }
             await createDeck();
             break;
