@@ -1,4 +1,5 @@
-import { createElement, deckAnimation, shuffleDeckAnimation, distributeAnimation, flipCardAnimation, getCardValues} from './generic/index.js';
+import { func } from '../generic/index.js';
+import { anim } from '../animations/index.js';
 import { api } from '../api/index.js';
 import { game, navbar } from '../game/index.js';
 
@@ -40,10 +41,10 @@ export const createDeck = async () => {
     const { remaining } = await api.getDeckInfo(myDeck);
 
     for (let i = 0; i < remaining; i++) {
-        let card = await createElement('div', null, ["card"]);
-        let card_inner = createElement('div', null, ["card-inner"]);
-        let card_back = createElement('img', null, ["card-back"]);
-        let card_front = createElement('img', null, ["card-front"]);
+        let card = await func.createHtmlElement('div', null, ["card"]);
+        let card_inner = func.createHtmlElement('div', null, ["card-inner"]);
+        let card_back = func.createHtmlElement('img', null, ["card-back"]);
+        let card_front = func.createHtmlElement('img', null, ["card-front"]);
 
         card.append(card_inner);
         card_inner.append(card_back, card_front);
@@ -51,7 +52,7 @@ export const createDeck = async () => {
         
         card.style.margin = `${i * -0.3}px 0 0 ${i * -0.2}px`;
         deckElement.append(card);
-        deckAnimation(card, 'generate-deck-pile', `${i / remaining}s`);
+        anim.createDeck(card, 'generate-deck-pile', `${i / remaining}s`);
     }
 
     firstDeckCard = deckElement.lastChild;
@@ -68,13 +69,13 @@ const playerDeckFlipCardEvent = async () => {
     let card_front = card_inner.querySelector('.card-front');
 
     const drawCard = await api.drawCardFromDeck(myDeck, 1);
-    const cardValues = getCardValues(drawCard[0].code);
+    const cardValues = func.getCardValues(drawCard[0].code);
 
     await checkDeck();
 
     card_front.src =  drawCard[0].image;
 
-    flipCardAnimation(card_inner, `500ms`);
+    anim.flipCard(card_inner, `500ms`);
 
     window.setTimeout(() => {
         window.document.addEventListener('keydown', onKeyDownEvent, false);
@@ -116,7 +117,7 @@ const cardEvent = async () => {
     playerZone.appendChild(firstDeckCard);
     let newRect = firstDeckCard.getBoundingClientRect();
 
-    distributeAnimation(card_inner, oldRect, newRect, `500ms`);
+    anim.distributeCard(card_inner, oldRect, newRect, `500ms`);
     
     window.setTimeout(()=> {
         playerZone.lastChild.addEventListener('click', playerDeckFlipCardEvent, false);

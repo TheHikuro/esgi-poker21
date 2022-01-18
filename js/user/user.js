@@ -1,3 +1,5 @@
+import { func } from '../generic/index.js';
+
 switch (window.location.pathname) {
     case '/html/game-page.html':
         if (localStorage.getItem('username') === null) {
@@ -11,7 +13,7 @@ switch (window.location.pathname) {
 // Init user, set username, set logout button
 const init = () => {
     const myUsername = window.document.getElementById('username');
-    const myNewUsername = window.document.createElement('span');
+    const myNewUsername = func.createHtmlElement('span');
     myUsername.parentNode.addEventListener('click', logout, false);
     myNewUsername.innerHTML = localStorage.getItem('username');
     myUsername.appendChild(myNewUsername);

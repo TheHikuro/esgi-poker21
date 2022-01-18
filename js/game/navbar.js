@@ -1,11 +1,11 @@
-import { createElement } from "../cards/generic/index.js";
+import { func } from "../generic/index.js";
 import { buttons } from "./index.js"
  
 const navbarHtmlElement = document.querySelector('.actions');
 
 const init = async () => {
     buttons.navbar().forEach(btn => {
-        const btnHtmlElement = createElement('button', btn.id, [btn.class]);
+        const btnHtmlElement = func.createHtmlElement('button', btn.id, [btn.class]);
         btnHtmlElement.innerHTML = btn.value;
         btnHtmlElement.style.display = btn.rules.hide ? 'none' : null;
         btnHtmlElement.disabled = btn.rules.disabled;
