@@ -1,40 +1,43 @@
 import { createElement, deckAnimation, shuffleDeckAnimation, distributeAnimation, flipCardAnimation, getCardValues} from './generic/index.js';
 import { getDeck, getDeckInfo, drawCardFromDeck
 } from '../api/index.js';
+import { game, navbar } from '../game/index.js';
 
 let firstDeckCard = null;
 let reShuffle = null;
 let playerCard = null;
-let myDeck = localStorage.getItem('deckId') ? localStorage.getItem('deckId') : await getDeck();
+let myDeck = null;
 let isDeckCreated = false;
 
 const playerZone = window.document.getElementById('player-container');
 const deckElement = window.document.getElementById('deck');
 const deckCountElement = window.document.getElementById('deck-count');
-// const DealerZone = window.document.getElementById('dealer-container');
+const DealerZone = window.document.getElementById('dealer-container');
 
 const checkDeck = async () => {
     const { remaining } = await getDeckInfo(myDeck);
 
     if (myDeck && remaining >= 0) {
         deckCountElement.innerHTML = remaining;
+        await firstDeckCard.addEventListener('click', cardEvent, false);
     }
-
-    switch (remaining) {
-        case 0:
-            reShuffle = createElement('button', 're-shuffle', ['btn']);
-            reShuffle.innerHTML = 'Shuffle Deck';
-            reShuffle.addEventListener('click', reShuffleEvent, false);
-            deckCountElement.innerHTML = 'Plus de cartes dans le deck';
-            deckCountElement.appendChild(reShuffle);
-            break;
-        default:
-            await firstDeckCard.addEventListener('click', cardEvent, false);
-            break;
+    if(remaining < 52 && remaining > 1){
+        window.document.getElementById('shuffleDeck').addEventListener('click', game.shuffle, false);
+        navbar.buttonDisabledById('shuffleDeck', false);
+    }
+    else if(remaining < 2 && remaining > 0){
+        window.document.getElementById('shuffleDeck').removeEventListener('click', game.shuffle, false);
+        navbar.buttonDisabledById('shuffleDeck', true);
+    }
+    else if(remaining === 0){
+        window.document.getElementById('stopGame').removeEventListener('click', game.stop, false);
+        navbar.buttonHideById('stopGame', true);
+        navbar.buttonHideById('newGame', false);
+        window.document.getElementById('newGame').addEventListener('click', game.restart, false);
     }
 };
 
-const createDeck = async () => {
+export const createDeck = async () => {
     const { remaining } = await getDeckInfo(myDeck);
 
     for (let i = 0; i < remaining; i++) {
@@ -74,7 +77,9 @@ const playerDeckFlipCardEvent = async () => {
 
     flipCardAnimation(card_inner, `500ms`);
 
-    window.document.addEventListener('keydown', onKeyDownEvent, false);
+    window.setTimeout(() => {
+        window.document.addEventListener('keydown', onKeyDownEvent, false);
+    } , 500);
 }
 
 const returnCardToDeck = async () => {
@@ -116,7 +121,7 @@ const cardEvent = async () => {
     
     window.setTimeout(()=> {
         playerZone.lastChild.addEventListener('click', playerDeckFlipCardEvent, false);
-        //.addEventListener('click', returnCardToDeck, false); //add event to return button
+        window.document.addEventListener('keydown', onKeyDownEvent, false) //add event to return button
     }, 500);
 
     firstDeckCard = deckElement.lastChild;
@@ -144,11 +149,15 @@ const onKeyDownEvent = async (e) => {
                 console.log('Stand');
                 break; 
             case 67: // c
-                console.log('Cancel draw card event');
+                await returnCardToDeck();
                 break;
             case 82: // r
                 await reShuffleEvent();
                 break;
+            // case 32: // space
+            //     await cardEvent();
+            //     await playerDeckFlipCardEvent();
+            //     break;
             default:
                 break;
         }
@@ -159,6 +168,9 @@ export const showDeck = async () => {
 
     switch (isDeckCreated) {
         case false:
+            if(!myDeck){
+                myDeck = await getDeck();
+            }
             await createDeck();
             break;
         case true:
@@ -169,4 +181,17 @@ export const showDeck = async () => {
     }
 
     window.document.addEventListener('keydown', onKeyDownEvent, false);
+}
+
+export const clearAllDecks = async() => {
+    firstDeckCard = null;
+    reShuffle = null;
+    playerCard = null;
+    myDeck = null;
+    isDeckCreated = false;
+
+    deckElement.replaceChildren();
+    playerZone.replaceChildren();
+    DealerZone.replaceChildren();
+    deckCountElement.innerHTML = '';
 }

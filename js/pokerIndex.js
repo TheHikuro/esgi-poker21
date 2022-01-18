@@ -1,5 +1,7 @@
-import { showDeck } from "./cards/index.js";
 import { username } from "./user/index.mjs";
+import { game, navbar } from "./game/index.js";
 
-username()
-showDeck()
+localStorage.removeItem('deckId');
+username();
+navbar.init();
+window.document.getElementById('newGame').addEventListener('click', game.start , false);
