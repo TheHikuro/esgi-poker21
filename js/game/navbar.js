@@ -1,39 +1,10 @@
 import { createElement } from "../cards/generic/index.js";
-
-const buttons = [
-    {
-        value: 'New Game',
-        id: 'newGame',
-        class: 'btn',
-        rules: {
-            disabled: false,
-            hide: false
-        }
-    },
-    {
-        value: 'Stop Game',
-        id: 'stopGame',
-        class: 'btn',
-        rules: {
-            disabled: false,
-            hide: true
-        }
-    },
-    {
-        value: 'Shuffle Deck',
-        id: 'shuffleDeck',
-        class: 'btn',
-        rules: {
-            disabled: true,
-            hide: false
-        }
-    }
-]
+import { buttons } from "./index.js"
  
 const navbarHtmlElement = document.querySelector('.actions');
 
 const init = async () => {
-    buttons.forEach(btn => {
+    buttons.navbar().forEach(btn => {
         const btnHtmlElement = createElement('button', btn.id, [btn.class]);
         btnHtmlElement.innerHTML = btn.value;
         btnHtmlElement.style.display = btn.rules.hide ? 'none' : null;

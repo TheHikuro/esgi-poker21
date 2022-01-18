@@ -1,6 +1,10 @@
 import { showDeck, clearAllDecks } from "../cards/index.js";
 import { navbar } from "./index.js"
 
+const init = async () => {
+    window.document.getElementById('newGame').addEventListener('click', start , false);
+}
+
 const start = async () => {
     window.document.getElementById('newGame').removeEventListener('click', start, false);
     navbar.buttonHideById('newGame', true);
@@ -34,4 +38,4 @@ const shuffle = async () => {
     window.document.getElementById('shuffleDeck').addEventListener('click', shuffle, false);
 }
 
-export { start, stop, restart, shuffle }
+export { init, start, stop, restart, shuffle }
