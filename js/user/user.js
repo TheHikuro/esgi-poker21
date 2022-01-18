@@ -8,17 +8,19 @@ switch (window.location.pathname) {
         break;
 }
 
-export const username = () => {
+// Init user, set username, set logout button
+const init = () => {
     const myUsername = window.document.getElementById('username');
     const myNewUsername = window.document.createElement('span');
+    myUsername.parentNode.addEventListener('click', logout, false);
     myNewUsername.innerHTML = localStorage.getItem('username');
     myUsername.appendChild(myNewUsername);
 }
 
-export const logout = () => {
+// Logout user
+const logout = () => {
     localStorage.removeItem('username');
     window.location.href = '../index.html';
 }
 
-window.username = username
-window.logout = logout
+export { init, logout}
