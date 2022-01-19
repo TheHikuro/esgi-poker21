@@ -1,46 +1,59 @@
-import { showDeck, clearAllDecks } from "../cards/index.js";
-import { navbar } from "./index.js"
+import { deck } from '../deck/index.js';
+import { user } from '../user/index.js'
+import { func } from '../generic/index.js';
+import { navbar } from './index.js'
+
+const newGameElement = func.getDynamicElementById('newGame');
+const stopGameElement = func.getDynamicElementById('stopGame');
+const shuffleElement = func.getDynamicElementById('shuffleDeck');
 
 // Add start EventListener
 const init = () => {
-    window.document.getElementById('newGame').addEventListener('click', start , false);
+    user.init();
+    navbar.init();
+    newGameElement().addEventListener('click', start , { once: true });
 }
 
 // Launch game and update navbar buttons
 const start = async () => {
-    window.document.getElementById('newGame').removeEventListener('click', start, false);
-    navbar.buttonHideById('newGame', true);
-    navbar.buttonHideById('stopGame', false);
-    window.document.getElementById('stopGame').addEventListener('click', stop, false);
-    showDeck();
+    func.hideElementById('newGame', true);
+    func.hideElementById('stopGame', false);
+    deck.init();
+    stopGameElement().addEventListener('click', stop, { once: true });
 }
 
 // Stop game and update navbar buttons
 const stop = async () => {
-    window.document.getElementById('shuffleDeck').removeEventListener('click', shuffle, false);
-    window.document.getElementById('stopGame').removeEventListener('click', stop, false);
-    navbar.buttonHideById('stopGame', true);
-    navbar.buttonDisabledById('shuffleDeck', true);
-    navbar.buttonHideById('newGame', false);
-    window.document.getElementById('newGame').addEventListener('click', start, false);
-    await clearAllDecks();
+    shuffleElement().removeEventListener('click', shuffle);
+    deck.stop();
+    func.hideElementById('stopGame', true);
+    func.disabledElementById('shuffleDeck', true);
+    func.hideElementById('newGame', false);
+    newGameElement().addEventListener('click', reset, { once: true });
 }
 
 // Restart game
 const restart = async () => {
-    window.document.getElementById('newGame').removeEventListener('click', restart, false);
+    newGameElement().removeEventListener('click', restart);
     await stop();
-    await start();
+}
+
+// Restore deck on new game
+const reset = async () => {
+    deck.reset();
+    func.hideElementById('newGame', true);
+    func.hideElementById('stopGame', false);
+    stopGameElement().addEventListener('click', stop, { once: true });
 }
 
 // Shuffle deck
 const shuffle = async () => {
-    window.document.getElementById('shuffleDeck').removeEventListener('click', shuffle, false);
-    navbar.buttonDisabledById('shuffleDeck', true);
+    shuffleElement().removeEventListener('click', shuffle);
+    func.disabledElementById('shuffleDeck', true);
     console.log('shuffle animation :)');
     //await shuffle animation
-    navbar.buttonDisabledById('shuffleDeck', false);
-    window.document.getElementById('shuffleDeck').addEventListener('click', shuffle, false);
+    func.disabledElementById('shuffleDeck', false);
+    shuffleElement().addEventListener('click', shuffle);
 }
 
-export { init, start, stop, restart, shuffle }
+export { init, start, stop, restart, reset, shuffle }

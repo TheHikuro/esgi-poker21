@@ -1,24 +1,17 @@
-import { func } from "../generic/index.js";
-import { buttons } from "./index.js"
+import { func } from '../generic/index.js';
+import { buttons } from './index.js';
  
 const navbarHtmlElement = document.querySelector('.actions');
 
-const init = async () => {
+// Init navbar buttons
+const init = () => {
     buttons.navbar().forEach(btn => {
         const btnHtmlElement = func.createHtmlElement('button', btn.id, [btn.class]);
         btnHtmlElement.innerHTML = btn.value;
-        btnHtmlElement.style.display = btn.rules.hide ? 'none' : null;
-        btnHtmlElement.disabled = btn.rules.disabled;
         navbarHtmlElement.appendChild(btnHtmlElement);
+        func.hideElementById(btn.id, btn.rules.hide);
+        func.disabledElementById(btn.id, btn.rules.disabled);
     })
 }
 
-const buttonDisabledById = async (id, disabled) => {
-    document.getElementById(id).disabled = disabled;
-}
-
-const buttonHideById = async (id, hide) => {
-    document.getElementById(id).style.display = hide ? 'none' : null;
-}
-
-export { init, buttonDisabledById, buttonHideById }
+export { init }

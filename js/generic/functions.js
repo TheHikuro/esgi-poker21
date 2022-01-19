@@ -1,3 +1,4 @@
+// Create element, can set with id et classes
 const createHtmlElement = (type, id, classNames) => {
     const element = window.document.createElement(type);
     if (id) {
@@ -9,6 +10,7 @@ const createHtmlElement = (type, id, classNames) => {
     return element;
 }
 
+// Get card values from Regex
 const getCardValues = (cardId) => {
     const matchesFilter = (new RegExp('^(([1-9])|([0,J,Q,K])|(A))[C,D,H,S]$')).exec(cardId);
     let cardValues = [];
@@ -31,4 +33,28 @@ const getCardValues = (cardId) => {
     return cardValues;
 }
 
-export { createHtmlElement, getCardValues }
+// Disable or Active element (button) by id
+const disabledElementById = (id, disabled) => {
+    document.getElementById(id).disabled = disabled;
+}
+
+// Hide or Show element by id
+const hideElementById = (id, hide) => {
+    document.getElementById(id).style.display = hide ? 'none' : null;
+}
+
+// Auto refresh variable to get element by id
+const getDynamicElementById = (id) => {
+    return () => {  return window.document.getElementById(id); }
+} 
+
+// Auto refresh variable to get last child of element by id
+const getDyncamicElementLastChildById = (id) => {
+    return () => {  return window.document.getElementById(id).lastChild; }
+} 
+
+const sleep = async (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export { createHtmlElement, getCardValues, disabledElementById, hideElementById, getDynamicElementById, getDyncamicElementLastChildById, sleep }
