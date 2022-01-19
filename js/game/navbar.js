@@ -1,53 +1,17 @@
-import { createElement } from "../cards/generic/index.js";
-
-const buttons = [
-    {
-        value: 'New Game',
-        id: 'newGame',
-        class: 'btn',
-        rules: {
-            disabled: false,
-            hide: false
-        }
-    },
-    {
-        value: 'Stop Game',
-        id: 'stopGame',
-        class: 'btn',
-        rules: {
-            disabled: false,
-            hide: true
-        }
-    },
-    {
-        value: 'Shuffle Deck',
-        id: 'shuffleDeck',
-        class: 'btn',
-        rules: {
-            disabled: true,
-            hide: false
-        }
-    }
-]
+import { func } from '../generic/index.js';
+import { buttons } from './index.js';
  
 const navbarHtmlElement = document.querySelector('.actions');
 
-const init = async () => {
-    buttons.forEach(btn => {
-        const btnHtmlElement = createElement('button', btn.id, [btn.class]);
+// Init navbar buttons
+const init = () => {
+    buttons.navbar().forEach(btn => {
+        const btnHtmlElement = func.createHtmlElement('button', btn.id, [btn.class]);
         btnHtmlElement.innerHTML = btn.value;
-        btnHtmlElement.style.display = btn.rules.hide ? 'none' : null;
-        btnHtmlElement.disabled = btn.rules.disabled;
         navbarHtmlElement.appendChild(btnHtmlElement);
+        func.hideElementById(btn.id, btn.rules.hide);
+        func.disabledElementById(btn.id, btn.rules.disabled);
     })
 }
 
-const buttonDisabledById = async (id, disabled) => {
-    document.getElementById(id).disabled = disabled;
-}
-
-const buttonHideById = async (id, hide) => {
-    document.getElementById(id).style.display = hide ? 'none' : null;
-}
-
-export { init, buttonDisabledById, buttonHideById }
+export { init }

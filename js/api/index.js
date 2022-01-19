@@ -1,1 +1,1 @@
-export * from './request.js';
+export * as api from './request.js';
