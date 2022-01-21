@@ -10,9 +10,34 @@ const createDeck = (element, nameKeyFrame, time) => {
 
 // Shuffle animation
 const shuffleDeck = () => {
-    deckElement.childNodes.forEach(card => {
-        //do something
-    });
+    const leftPile = []
+    const rightPile = []
+    const deckElement = document.querySelector('.deck');
+    
+    for(let i = 0; i < deckElement.children.length; i++){
+        if(i % 2 === 0){
+            leftPile.push(deckElement.children[i]);
+        }
+        else{
+            rightPile.push(deckElement.children[i]);
+        }
+    }
+    requestAnimationFrame(() => {
+        for(let i = 0; i < leftPile.length; i++){
+            leftPile[i].style.animationName = 'shuffle-left';
+            leftPile[i].style.animationDuration = `${i * 0.02}s`;
+            leftPile[i].style.animationTimingFunction = 'ease-in-out';
+            leftPile[i].style.animationFillMode = 'forwards';
+            leftPile[i].style.transition =  `all ${i * 0.02}s ease-in-out`;
+        }
+        for(let i = 0; i < rightPile.length; i++){
+            rightPile[i].style.animationName = 'shuffle-right';
+            rightPile[i].style.animationDuration = `${i * 0.02}s`;
+            rightPile[i].style.animationTimingFunction = 'ease-in-out';
+            rightPile[i].style.animationFillMode = 'forwards';
+            rightPile[i].style.transition =  `all ${i * 0.02}s ease-in-out`;
+        }
+    })
 }
 
 // Card distribution animation
@@ -37,4 +62,4 @@ const flipCard = (card, time) => {
     card.style.transition =  `all ${time}`;
 }
 
-export { createDeck, shuffleDeck, distributeCard, flipCard}
+export { createDeck, shuffleDeck, distributeCard, flipCard }
