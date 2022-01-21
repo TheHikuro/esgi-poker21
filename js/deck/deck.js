@@ -93,7 +93,7 @@ const loadEventsListener = async () => {
 }
 
 const shuffle = () => {
-    deckAreaElement.childNodes.forEach(card => {
+    deckAreaElement().childNodes.forEach(card => {
         card.style['animation-name'] = null;
         card.transform = null;
     })

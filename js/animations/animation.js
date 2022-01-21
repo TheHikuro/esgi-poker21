@@ -1,3 +1,5 @@
+import { func } from '../generic/index.js';
+
 // Deck creation animation
 const createDeck = (element, nameKeyFrame, time) => {
     requestAnimationFrame(() => {
@@ -62,4 +64,34 @@ const flipCard = (card, time) => {
     card.style.transition =  `all ${time}`;
 }
 
-export { createDeck, shuffleDeck, distributeCard, flipCard }
+const winAnimation = (winOrLose) => {
+    const backContainer = func.createHtmlElement('div', 'backContainer', ['backContainer']);
+    const textContainer = func.createHtmlElement('div', 'textContainer', ['textContainer']);
+    const arrOfText = ['You win', 'You lose'];
+    const text = func.createHtmlElement('h1', 'winOrLose', ['winOrLose']);
+    const win = func.splitArrayInLetters(arrOfText)
+
+    textContainer.style.animationName = 'gameStatus'
+    textContainer.style.animationDuration = '1s'
+    textContainer.style.animationTimingFunction = 'ease-in-out'
+    textContainer.style.animationFillMode = 'forwards'
+    textContainer.style.transition =  'all 0.5s ease-in-out'
+
+    text.style.animationName = 'textGameStatus'
+    text.style.animationDuration = '4s'
+    text.style.animationTimingFunction = 'ease-in-out'
+    text.style.animationFillMode = 'forwards'
+    text.style.transition =  'all 1s ease-in-out'
+
+    winOrLose ? text.innerHTML = `${win[0].join('')} 🥳` : text.innerHTML = `${win[1].join('')} 😢`;
+
+    textContainer.appendChild(text);
+    backContainer.appendChild(textContainer);
+    document.body.appendChild(backContainer);
+
+    text.addEventListener('animationend', () => {
+        backContainer.remove();
+    })
+}
+
+export { createDeck, shuffleDeck, distributeCard, flipCard, winAnimation };

@@ -2,6 +2,7 @@ import { deck } from '../deck/index.js';
 import { user } from '../user/index.js'
 import { func, modalWin } from '../generic/index.js';
 import { navbar } from './index.js'
+import { anim } from '../animations/index.js';
 
 const newGameElement = func.getDynamicElementById('newGame');
 const stopGameElement = func.getDynamicElementById('stopGame');
@@ -21,6 +22,7 @@ const init = async () => {
         modalElement().addEventListener('click', () => {
             modalWin();
         });
+        anim.winAnimation(true);
     }
 }
 
@@ -79,6 +81,8 @@ const loadSave = async () => {
                 stopGameElement().addEventListener('click', stop, { onece: true });
             case shuffleElement().disabled:
                 shuffleElement().addEventListener('click', shuffle, { onece: true });
+            case modalElement().disabled:
+                modalElement().addEventListener('click', modalWin)
         }
     }
 }
