@@ -57,4 +57,8 @@ const sleep = async (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export { createHtmlElement, getCardValues, disabledElementById, hideElementById, getDynamicElementById, getDyncamicElementLastChildById, sleep }
+const haveDeckId = () => {
+    return localStorage.getItem('deckId') ? true : false;
+}
+
+export { createHtmlElement, getCardValues, disabledElementById, hideElementById, getDynamicElementById, getDyncamicElementLastChildById, sleep, haveDeckId }

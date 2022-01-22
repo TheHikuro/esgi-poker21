@@ -3,11 +3,11 @@ import { anim } from '../animations/index.js';
 import { api } from '../api/index.js';
 import { game } from '../game/index.js';
 
-const playerAreaElement = window.document.getElementById('player-container');
-const dealerAreaElement = window.document.getElementById('dealer-container');
+const playerAreaElement = func.getDynamicElementById('player-container');
+const dealerAreaElement = func.getDynamicElementById('dealer-container');
 
-const deckAreaElement = window.document.getElementById('deck');
-const cardRemainingElement = window.document.getElementById('deck-count');
+const deckAreaElement = func.getDynamicElementById('deck');
+const cardRemainingElement = func.getDynamicElementById('deck-count');
 
 const firstDeckCard = func.getDyncamicElementLastChildById('deck');
 const firstPlayerCard = func.getDyncamicElementLastChildById('player-container');
@@ -15,16 +15,15 @@ const firstDealerCard = func.getDyncamicElementLastChildById('dealer-container')
 
 const cardBackSrc = '../assets/img/back.png';
 
-let deckMaxCard = 0;
-let deckId = null;
+let deckMaxCard = 52;
+let deckId = localStorage.getItem('deckId');
 
 // Init new deck
 const init = async () => {
-    deckId = await api.getDeck();
+    deckId = !func.haveDeckId() ? await api.getDeck() : localStorage.getItem('deckId');
     const { remaining } = await getDeckInfo();
 
-    deckMaxCard = remaining;
-    cardRemainingElement.innerHTML = remaining;
+    cardRemainingElement().innerHTML = remaining;
 
     for (let i = 1; i <= remaining; i++) {
         let card = func.createHtmlElement('div', null, ["card"]);
@@ -37,16 +36,20 @@ const init = async () => {
         card_back.src = cardBackSrc;
         
         card.style.margin = `${i * -0.3}px 0 0 ${i * -0.2}px`;
-        deckAreaElement.append(card);
+        deckAreaElement().append(card);
         anim.createDeck(card, 'generate-deck-pile', `${i / remaining}s`);
     }
 
     // Wait end of animation
     await func.sleep(1000);
 
-    firstDeckCard().event = true;
-    firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
-    window.document.addEventListener('keydown', keydownListener);
+    if(firstDeckCard()){
+        game.save();
+
+        firstDeckCard().event = true;
+        firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
+        window.document.addEventListener('keydown', keydownListener);
+    }
 }
 
 // Stop game, remove event listener
@@ -71,11 +74,22 @@ const reset = async () => {
     shuffle();
     deckId = await api.getDeck();
     const { remaining } = await getDeckInfo();
-    cardRemainingElement.innerHTML = remaining;
+    cardRemainingElement().innerHTML = remaining;
+    game.save();
     firstDeckCard().event = true;
     firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
     window.document.removeEventListener('keydown', keydownListener);
     window.document.addEventListener('keydown', keydownListener);
+}
+
+// Load all deck event listener
+const loadEventsListener = async () => {
+    // deckId = !func.haveDeckId() ? await api.getDeck() : localStorage.getItem('deckId');
+    window.document.addEventListener('keydown', keydownListener);
+    if(firstDeckCard()){
+        firstDeckCard().event = true;
+        firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
+    }
 }
 
 const shuffle = () => {
@@ -103,26 +117,27 @@ const checkDeck = (remaining) => {
         window.document.getElementById('newGame').addEventListener('click', game.reset, { once: true });
         stop();
     }
+    game.save();
 }
 
 // Add deck card into player area
 const addCardIntoPlayerArea = async () => {
     firstDeckCard().event = undefined;
     const { remaining } = await getDeckInfo();
-    cardRemainingElement.innerHTML = remaining - 1;
+    cardRemainingElement().innerHTML = remaining - 1;
 
     let card_inner = firstDeckCard().querySelector('.card-inner');
     firstDeckCard().style['animation-name'] = null;
 
     let oldRect = firstDeckCard().getBoundingClientRect();
-    playerAreaElement.appendChild(firstDeckCard());
+    playerAreaElement().appendChild(firstDeckCard());
     let newRect = firstPlayerCard().getBoundingClientRect();
 
-    anim.distributeCard(card_inner, oldRect, newRect, `500ms`);
+    anim.distributeCard(card_inner, oldRect, newRect, `400ms`);
     
-    await func.sleep(500);
+    await func.sleep(400);
 
-    cardRemainingElement.innerHTML = remaining - 1;
+    cardRemainingElement().innerHTML = remaining - 1;
     firstPlayerCard().event = true;
     firstPlayerCard().addEventListener('click', playerFlipCard, { once: true });
 }
@@ -132,20 +147,20 @@ const addCardIntoDealerArea = async () => {
     firstDeckCard().event = undefined;
     firstDeckCard().removeEventListener('click', addCardIntoPlayerArea);
     const { remaining } = await getDeckInfo();
-    cardRemainingElement.innerHTML = remaining - 1;
+    cardRemainingElement().innerHTML = remaining - 1;
 
     let card_inner = firstDeckCard().querySelector('.card-inner');
     firstDeckCard().style['animation-name'] = null;
 
     let oldRect = firstDeckCard().getBoundingClientRect();
-    dealerAreaElement.appendChild(firstDeckCard());
+    dealerAreaElement().appendChild(firstDeckCard());
     let newRect = firstDealerCard().getBoundingClientRect();
 
-    anim.distributeCard(card_inner, oldRect, newRect, `500ms`);
+    anim.distributeCard(card_inner, oldRect, newRect, `400ms`);
     
-    await func.sleep(500);
+    await func.sleep(400);
 
-    cardRemainingElement.innerHTML = remaining - 1;
+    cardRemainingElement().innerHTML = remaining - 1;
 
     firstDeckCard().event = true;
     firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
@@ -160,8 +175,8 @@ const playerReturnCardToDeck = async () => {
 
     await func.sleep(500);
 
-    cardRemainingElement.innerHTML = remaining;
-    deckAreaElement.append(firstPlayerCard());
+    cardRemainingElement().innerHTML = remaining;
+    deckAreaElement().append(firstPlayerCard());
     card_inner.style.top = null;
     card_inner.style.left = null;
     firstDeckCard().event = true;
@@ -181,10 +196,9 @@ const playerFlipCard = async () => {
 
     card_front.src =  drawCard[0].image;
 
-    anim.flipCard(card_inner, `500ms`);
+    anim.flipCard(card_inner, `300ms`);
 
-    // If there cards left, player get a card, else
-    await func.sleep(500);
+    await func.sleep(300);
 
     checkDeck(remaining);
 
@@ -206,7 +220,7 @@ const returnAllPlayerCards = async () => {
 
         await func.sleep(100);
 
-        deckAreaElement.append(firstPlayerCard());
+        deckAreaElement().append(firstPlayerCard());
         card_inner.style.top = null;
         card_inner.style.left = null;
         returnAllPlayerCards();
@@ -225,7 +239,7 @@ const returnAllDealerCards = async () => {
 
         await func.sleep(100);
 
-        deckAreaElement.append(firstDealerCard());
+        deckAreaElement().append(firstDealerCard());
         card_inner.style.top = null;
         card_inner.style.left = null;
         returnAllDealerCards();
@@ -269,4 +283,4 @@ const keydownListener = (event) => {
     }
 }
 
-export { init, stop, reset, shuffle }
+export { init, stop, loadEventsListener ,reset, shuffle, getDeckInfo, keydownListener }
