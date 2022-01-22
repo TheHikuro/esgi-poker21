@@ -1,17 +1,22 @@
 import { deck } from '../deck/index.js';
 import { user } from '../user/index.js'
 import { func } from '../generic/index.js';
-import { navbar } from './index.js'
+import { navbar } from './index.js';
 
 const newGameElement = func.getDynamicElementById('newGame');
 const stopGameElement = func.getDynamicElementById('stopGame');
 const shuffleElement = func.getDynamicElementById('shuffleDeck');
 
 // Add start EventListener
-const init = () => {
-    user.init();
-    navbar.init();
-    newGameElement().addEventListener('click', start , { once: true });
+const init = async () => {
+    if(func.haveDeckId() && localStorage.getItem('gameState')){
+        await loadSave();
+    }
+    else{
+        user.init();
+        navbar.init();
+        newGameElement().addEventListener('click', start , { once: true });
+    }
 }
 
 // Launch game and update navbar buttons
@@ -29,6 +34,7 @@ const stop = async () => {
     func.hideElementById('stopGame', true);
     func.disabledElementById('shuffleDeck', true);
     func.hideElementById('newGame', false);
+    save();
     newGameElement().addEventListener('click', reset, { once: true });
 }
 
@@ -46,6 +52,32 @@ const reset = async () => {
     stopGameElement().addEventListener('click', stop, { once: true });
 }
 
+// Save Game state
+const save = () => {
+    localStorage.setItem('gameState', window.document.body.outerHTML);
+}
+
+// Load html state page
+const loadSave = async () => {
+    if(localStorage.getItem('gameState')){
+        window.document.body.outerHTML =  localStorage.getItem('gameState');
+        window.document.getElementById('deck').innerHTML = null;
+        await func.sleep(250);
+        window.document.getElementById('username').parentNode.addEventListener('click', user.logout, false);
+        await deck.init();
+        await deck.loadEventsListener();
+
+        switch(false){
+            case newGameElement().disabled:
+                newGameElement().addEventListener('click', reset, { onece: true });
+            case stopGameElement().disabled:
+                stopGameElement().addEventListener('click', stop, { onece: true });
+            case shuffleElement().disabled:
+                shuffleElement().addEventListener('click', shuffle, { onece: true });
+        }
+    }
+}
+
 // Shuffle deck
 const shuffle = async () => {
     shuffleElement().removeEventListener('click', shuffle);
@@ -56,4 +88,4 @@ const shuffle = async () => {
     shuffleElement().addEventListener('click', shuffle);
 }
 
-export { init, start, stop, restart, reset, shuffle }
+export { init, start, stop, restart, reset, save, loadSave, shuffle }

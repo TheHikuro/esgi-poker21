@@ -21,8 +21,6 @@ const init = () => {
 
 // Logout user
 const logout = () => {
-    localStorage.removeItem('username');
-    localStorage.removeItem('deckId');
     window.location.href = '../index.html';
 }
 
