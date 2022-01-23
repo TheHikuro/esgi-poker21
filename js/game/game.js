@@ -22,7 +22,6 @@ const init = async () => {
         modalElement().addEventListener('click', () => {
             modalWin();
         });
-        anim.winAnimation(true);
     }
 }
 

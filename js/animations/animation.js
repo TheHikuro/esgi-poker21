@@ -1,12 +1,18 @@
 import { func } from '../generic/index.js';
 
+const myCustomAnimation = (element, nameKeyFrame, time, fillMode, smooth, transform) => {
+    element.style.animationName = nameKeyFrame || null;
+    element.style.animationDuration = time;
+    element.style.animationTimingFunction = smooth;
+    element.style.animationFillMode = fillMode;
+    element.style.transition =  `all ${time} ${smooth}`;
+    element.style.transform = transform || null;
+}
+
 // Deck creation animation
 const createDeck = (element, nameKeyFrame, time) => {
     requestAnimationFrame(() => {
-        element.style.animationName = nameKeyFrame;
-        element.style.animationDuration = time;
-        element.style.animationTimingFunction = 'ease-in-out';
-        element.style.animationFillMode = 'forwards';
+        myCustomAnimation(element, nameKeyFrame, time, 'forwards', 'ease-in-out');
     });
 }
 
@@ -26,18 +32,10 @@ const shuffleDeck = () => {
     }
     requestAnimationFrame(() => {
         for(let i = 0; i < leftPile.length; i++){
-            leftPile[i].style.animationName = 'shuffle-left';
-            leftPile[i].style.animationDuration = `${i * 0.02}s`;
-            leftPile[i].style.animationTimingFunction = 'ease-in-out';
-            leftPile[i].style.animationFillMode = 'forwards';
-            leftPile[i].style.transition =  `all ${i * 0.02}s ease-in-out`;
+            myCustomAnimation(leftPile[i], 'shuffle-left', `${i * 0.02}s`, 'forwards', 'ease-in-out');
         }
         for(let i = 0; i < rightPile.length; i++){
-            rightPile[i].style.animationName = 'shuffle-right';
-            rightPile[i].style.animationDuration = `${i * 0.02}s`;
-            rightPile[i].style.animationTimingFunction = 'ease-in-out';
-            rightPile[i].style.animationFillMode = 'forwards';
-            rightPile[i].style.transition =  `all ${i * 0.02}s ease-in-out`;
+            myCustomAnimation(rightPile[i], 'shuffle-right', `${i * 0.02}s`, 'forwards', 'ease-in-out');
         }
     })
 }
@@ -58,10 +56,7 @@ const distributeCard = (moveElement, oldRect, newRect, time) => {
 
 // Flip card animation
 const flipCard = (card, time) => {
-    card.style.animationTimingFunction = 'ease-in-out';
-    card.style.animationFillMode = 'forwards';
-    card.style.transform = `translate(${-parseFloat(card.style.left)}px, ${-parseFloat(card.style.top)}px) rotateY(180deg)`;
-    card.style.transition =  `all ${time}`;
+    myCustomAnimation(card, 'flipCard', `${time}s`, 'forwards', 'ease-in-out', `translate(${-parseFloat(card.style.left)}px, ${-parseFloat(card.style.top)}px) rotateY(180deg)`);
 }
 
 const winAnimation = (winOrLose) => {
@@ -69,21 +64,28 @@ const winAnimation = (winOrLose) => {
     const textContainer = func.createHtmlElement('div', 'textContainer', ['textContainer']);
     const arrOfText = ['You win', 'You lose'];
     const text = func.createHtmlElement('h1', 'winOrLose', ['winOrLose']);
+    const imgBlacJack = func.createHtmlElement('img', 'imgBlacJack', ['imgBlacJack']);
     const win = func.splitArrayInLetters(arrOfText)
 
-    textContainer.style.animationName = 'gameStatus'
-    textContainer.style.animationDuration = '1s'
-    textContainer.style.animationTimingFunction = 'ease-in-out'
-    textContainer.style.animationFillMode = 'forwards'
-    textContainer.style.transition =  'all 0.5s ease-in-out'
-
-    text.style.animationName = 'textGameStatus'
-    text.style.animationDuration = '4s'
-    text.style.animationTimingFunction = 'ease-in-out'
-    text.style.animationFillMode = 'forwards'
-    text.style.transition =  'all 1s ease-in-out'
-
-    winOrLose ? text.innerHTML = `${win[0].join('')} 🥳` : text.innerHTML = `${win[1].join('')} 😢`;
+    switch (winOrLose) {
+        case 'win':
+            myCustomAnimation(textContainer, 'gameStatus', '1s', 'forwards', 'ease-in-out');
+            myCustomAnimation(text, 'textGameStatus', '4s', 'forwards', 'ease-in-out');
+            text.innerHTML = `${win[0].join('')} 🥳`;
+            break;
+        case 'lose':
+            myCustomAnimation(textContainer, 'gameStatus', '1s', 'forwards', 'ease-in-out');
+            myCustomAnimation(text, 'textGameStatus', '4s', 'forwards', 'ease-in-out');
+            text.innerHTML = `${win[1].join('')} 😢`;
+            break;
+        case 'blackjack':
+            textContainer.appendChild(imgBlacJack);
+            textContainer.style.backgroundColor = 'transparent';
+            textContainer.style.boxShadow = 'none';
+            imgBlacJack.src = '../../assets/img/blackjack.png';
+            myCustomAnimation(imgBlacJack, 'blackjack-appaear', '1s', 'forwards', 'ease-in-out');
+            break;
+    }
 
     textContainer.appendChild(text);
     backContainer.appendChild(textContainer);
@@ -91,6 +93,11 @@ const winAnimation = (winOrLose) => {
 
     text.addEventListener('animationend', () => {
         backContainer.remove();
+    })
+    imgBlacJack.addEventListener('animationend', () => {
+        setTimeout(() => {
+            backContainer.remove();
+        } , 1000);
     })
 }
 
