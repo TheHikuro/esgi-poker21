@@ -1,8 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Montserrat:wght@300;400;700&display=swap");
 
 :root {
-    --shadow-card: 0 1px 1px rgb(0 0 0 / 15%);
-    --shadow-btn: 0 1px 1px rgba(0, 0, 0, 0.699);
+  --shadow-card: 0 1px 1px rgb(0 0 0 / 15%);
+  --shadow-btn: 0 1px 1px rgba(0, 0, 0, 0.699);
 }
 
 html,
@@ -103,7 +103,7 @@ body {
   position: relative;
   text-decoration: none;
   text-transform: uppercase;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   width: 100%;
   height: 100%;
   border-radius: 5px;
@@ -114,6 +114,8 @@ body {
 .btn:hover {
   box-shadow: var(--shadow-card);
 }
+
+
 
 .body-container {
   display: flex;
@@ -133,22 +135,13 @@ body {
   height: 100%;
 }
 
-@keyframes generate-deck-pile {
-    0% {
-        transform: translateY(-200%) rotate(140deg);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
-
 .card {
-    background-color: transparent;
-    width: 150px;
-    height: 200px;
-    background-position: center;
-    background-size: cover;
-    perspective: 1000px;
+  background-color: transparent;
+  width: 150px;
+  height: 200px;
+  background-position: center;
+  background-size: cover;
+  perspective: 1000px;
 }
 
 .card .card-inner {
@@ -162,7 +155,7 @@ body {
 .card .card-inner .card-back,
 .card .card-inner .card-front {
   position: absolute;
-  background-color: #FFF;
+  background-color: #fff;
   box-shadow: var(--shadow-card);
   width: 100%;
   height: 100%;
@@ -188,13 +181,13 @@ body {
 }
 
 .deck .card:last-child::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 0px;
   height: 0px;
   right: 0;
-  background: #FFF;
-  box-shadow: rgba(0, 0, 0, 0.5) 3px 3px 3px; 
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.5) 3px 3px 3px;
   border-radius: 0 0 0 10px;
   transition: translate 500ms;
   transition-property: width, height;
@@ -213,10 +206,10 @@ body {
 
 .dealer-container .card,
 .player-container .card {
-    margin: 0px 0px 0px 5px !important;
-    cursor: pointer;
-    background-size: cover;
-    background-position: center;
+  margin: 0px 0px 0px 5px !important;
+  cursor: pointer;
+  background-size: cover;
+  background-position: center;
 }
 
 .deck-count {
@@ -270,67 +263,67 @@ body {
 }
 
 @media screen and (max-width: 450px) {
-    .main-container {
-        flex-direction: column;
-    }
-    
-    .header-container {
-        width: 100%;
-        height: 2.5rem;
-        display: flex;
-        justify-content: end;
-    }
+  .main-container {
+    flex-direction: column;
+  }
 
-    .username{
-        width: 4em;
-        height: 2rem;
-        align-items: center;
-        font-size: 1rem;
-        padding: 1px;
-    }
+  .header-container {
+    width: 100%;
+    height: 2.5rem;
+    display: flex;
+    justify-content: end;
+  }
 
-    .btn {
-      margin: 0 1em 2em;
-    }
-    
-    .body-container {
-        width: 100%;
-    }
+  .username {
+    width: 4em;
+    height: 2rem;
+    align-items: center;
+    font-size: 1rem;
+    padding: 1px;
+  }
 
-    .card .card-inner .card-back,
-    .card .card-inner .card-front {
-        position: absolute;
-        background-color: #FFF;
-        box-shadow: var(--shadow-card);
-        border-radius: 5px;
-        width: 70px;
-        height: 100px;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-    }
+  .btn {
+    margin: 0 1em 2em;
+  }
 
-    .deck .card {
-        top: 23em;
-        left: 1.5em;
-    }
-    
-    .deck-container {
-        width: 30%;
-    }
-    
-    .cards-container {
-        width: 60%;
-    }
-    
-    .dealer-container {
-        width: 100%;
-    }
-    
-    .player-container {
-        width: 100%;
-    }
-    
-    .board-container {
-        width: 20%;
-    }
+  .body-container {
+    width: 100%;
+  }
+
+  .card .card-inner .card-back,
+  .card .card-inner .card-front {
+    position: absolute;
+    background-color: #fff;
+    box-shadow: var(--shadow-card);
+    border-radius: 5px;
+    width: 70px;
+    height: 100px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  .deck .card {
+    top: 23em;
+    left: 1.5em;
+  }
+
+  .deck-container {
+    width: 30%;
+  }
+
+  .cards-container {
+    width: 60%;
+  }
+
+  .dealer-container {
+    width: 100%;
+  }
+
+  .player-container {
+    width: 100%;
+  }
+
+  .board-container {
+    width: 20%;
+  }
 }

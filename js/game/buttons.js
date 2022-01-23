@@ -26,6 +26,14 @@ const buttons = {
                 disabled: true,
                 hide: false
             }
+        }, {
+            value: 'Modal',
+            id: 'modalTest',
+            class: 'btn',
+            rules: {
+                disabled: false,
+                hide: false
+            }
         }
     ]
 }

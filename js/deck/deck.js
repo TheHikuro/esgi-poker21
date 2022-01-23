@@ -34,7 +34,7 @@ const init = async () => {
         card.append(card_inner);
         card_inner.append(card_back, card_front);
         card_back.src = cardBackSrc;
-        
+
         card.style.margin = `${i * -0.3}px 0 0 ${i * -0.2}px`;
         deckAreaElement().append(card);
         anim.createDeck(card, 'generate-deck-pile', `${i / remaining}s`);
@@ -55,11 +55,11 @@ const init = async () => {
 // Stop game, remove event listener
 const stop = () => {
     window.document.removeEventListener('keydown', keydownListener);
-    if(firstDeckCard()){
+    if (firstDeckCard()) {
         firstDeckCard().event = undefined;
         firstDeckCard().removeEventListener('click', addCardIntoPlayerArea);
     }
-    if(firstPlayerCard()){
+    if (firstPlayerCard()) {
         firstPlayerCard().event = undefined;
         firstPlayerCard().removeEventListener('click', playerFlipCard);
     }
@@ -70,7 +70,7 @@ const reset = async () => {
     stop();
     returnAllPlayerCards();
     returnAllDealerCards();
-    while(firstDealerCard() || firstPlayerCard()){ await func.sleep(100); }
+    while (firstDealerCard() || firstPlayerCard()) { await func.sleep(100); }
     shuffle();
     deckId = await api.getDeck();
     const { remaining } = await getDeckInfo();
@@ -93,12 +93,16 @@ const loadEventsListener = async () => {
 }
 
 const shuffle = () => {
-    alert('suffle animation !');
+    deckAreaElement().childNodes.forEach(card => {
+        card.style['animation-name'] = null;
+        card.transform = null;
+    })
+    anim.shuffleDeck();
 }
 
 // Get deck info
 const getDeckInfo = async () => {
-    if(deckId){
+    if (deckId) {
         return await api.getDeckInfo(deckId);
     }
     return null;
@@ -106,11 +110,11 @@ const getDeckInfo = async () => {
 
 // Action on deck cards remaining
 const checkDeck = (remaining) => {
-    if(remaining === deckMaxCard - 1){
+    if (remaining === deckMaxCard - 1) {
         window.document.getElementById('shuffleDeck').addEventListener('click', game.shuffle);
         func.disabledElementById('shuffleDeck', false);
     }
-    else if(remaining === 0) {
+    else if (remaining === 0) {
         window.document.getElementById('stopGame').removeEventListener('click', game.stop);
         func.hideElementById('stopGame', true);
         func.hideElementById('newGame', false);
@@ -194,7 +198,7 @@ const playerFlipCard = async () => {
 
     const { remaining } = await getDeckInfo();
 
-    card_front.src =  drawCard[0].image;
+    card_front.src = drawCard[0].image;
 
     anim.flipCard(card_inner, `300ms`);
 
@@ -202,7 +206,7 @@ const playerFlipCard = async () => {
 
     checkDeck(remaining);
 
-    if(firstDeckCard()){
+    if (firstDeckCard()) {
         firstDeckCard().event = true;
         firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
     }
@@ -210,7 +214,7 @@ const playerFlipCard = async () => {
 
 // Recursive player card return
 const returnAllPlayerCards = async () => {
-    if(firstPlayerCard()){
+    if (firstPlayerCard()) {
         let card_inner = firstPlayerCard().querySelector('.card-inner');
         let card_front = card_inner.querySelector('.card-front');
 
@@ -229,7 +233,7 @@ const returnAllPlayerCards = async () => {
 
 // Recursive dealer card return
 const returnAllDealerCards = async () => {
-    if(firstDealerCard()){
+    if (firstDealerCard()) {
         let card_inner = firstDealerCard().querySelector('.card-inner');
         let card_front = card_inner.querySelector('.card-front');
 
@@ -248,20 +252,20 @@ const returnAllDealerCards = async () => {
 
 // Keyboard event listener
 const keydownListener = (event) => {
-    switch(event.key){
+    switch (event.key) {
         // Return last player card to deck
         case 'c':
         // Player flip card
         case 'f':
-            if(firstPlayerCard()) {
-                if(firstPlayerCard().event === true){
+            if (firstPlayerCard()) {
+                if (firstPlayerCard().event === true) {
                     firstPlayerCard().event = undefined;
                     firstPlayerCard().removeEventListener('click', playerFlipCard);
 
-                    if(event.key === 'c'){
+                    if (event.key === 'c') {
                         playerReturnCardToDeck();
                     }
-                    else{
+                    else {
                         playerFlipCard();
                     }
                 }
@@ -269,8 +273,8 @@ const keydownListener = (event) => {
             break;
         // Add deck card into player area
         case 'd':
-            if(firstDeckCard()){
-                if(firstDeckCard().event === true){
+            if (firstDeckCard()) {
+                if (firstDeckCard().event === true) {
                     firstDeckCard().event = undefined;
                     firstDeckCard().removeEventListener('click', addCardIntoPlayerArea);
                     addCardIntoPlayerArea();

@@ -1,11 +1,14 @@
 import { deck } from '../deck/index.js';
 import { user } from '../user/index.js'
-import { func } from '../generic/index.js';
-import { navbar } from './index.js';
+import { func, modalWin } from '../generic/index.js';
+import { navbar } from './index.js'
+import { anim } from '../animations/index.js';
 
 const newGameElement = func.getDynamicElementById('newGame');
 const stopGameElement = func.getDynamicElementById('stopGame');
 const shuffleElement = func.getDynamicElementById('shuffleDeck');
+const modalElement = func.getDynamicElementById('modalTest');
+
 
 // Add start EventListener
 const init = async () => {
@@ -16,6 +19,9 @@ const init = async () => {
         user.init();
         navbar.init();
         newGameElement().addEventListener('click', start , { once: true });
+        modalElement().addEventListener('click', () => {
+            modalWin();
+        });
     }
 }
 
@@ -74,6 +80,8 @@ const loadSave = async () => {
                 stopGameElement().addEventListener('click', stop, { onece: true });
             case shuffleElement().disabled:
                 shuffleElement().addEventListener('click', shuffle, { onece: true });
+            case modalElement().disabled:
+                modalElement().addEventListener('click', modalWin)
         }
     }
 }
@@ -82,7 +90,7 @@ const loadSave = async () => {
 const shuffle = async () => {
     shuffleElement().removeEventListener('click', shuffle);
     func.disabledElementById('shuffleDeck', true);
-    console.log('shuffle animation :)');
+    await deck.shuffle();
     //await shuffle animation
     func.disabledElementById('shuffleDeck', false);
     shuffleElement().addEventListener('click', shuffle);

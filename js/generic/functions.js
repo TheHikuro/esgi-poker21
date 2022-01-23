@@ -61,4 +61,12 @@ const haveDeckId = () => {
     return localStorage.getItem('deckId') ? true : false;
 }
 
-export { createHtmlElement, getCardValues, disabledElementById, hideElementById, getDynamicElementById, getDyncamicElementLastChildById, sleep, haveDeckId }
+const splitArrayInLetters = (array) => {
+    let letters = [];
+    for(let i = 0; i < array.length; i++){
+        letters.push(array[i].split(''));
+    }
+    return letters;
+}
+
+export { createHtmlElement, getCardValues, disabledElementById, hideElementById, getDynamicElementById, getDyncamicElementLastChildById, sleep, splitArrayInLetters, haveDeckId }
