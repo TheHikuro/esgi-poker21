@@ -29,8 +29,8 @@ const init = async () => {
 const start = async () => {
     func.hideElementById('newGame', true);
     func.hideElementById('stopGame', false);
+    func.disabledElementById('stopGame', true);
     deck.init();
-    stopGameElement().addEventListener('click', stop, { once: true });
 }
 
 // Stop game and update navbar buttons
@@ -55,7 +55,7 @@ const reset = async () => {
     deck.reset();
     func.hideElementById('newGame', true);
     func.hideElementById('stopGame', false);
-    stopGameElement().addEventListener('click', stop, { once: true });
+    func.disabledElementById('stopGame', true);
 }
 
 // Save Game state

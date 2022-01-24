@@ -3,15 +3,15 @@ import { anim } from '../animations/index.js';
 import { api } from '../api/index.js';
 import { game } from '../game/index.js';
 
-const playerAreaElement = func.getDynamicElementById('player-container');
-const dealerAreaElement = func.getDynamicElementById('dealer-container');
+const playerAreaElement = func.getDynamicElementById('player-cards');
+const dealerAreaElement = func.getDynamicElementById('dealer-cards');
 
 const deckAreaElement = func.getDynamicElementById('deck');
 const cardRemainingElement = func.getDynamicElementById('deck-count');
 
 const firstDeckCard = func.getDyncamicElementLastChildById('deck');
-const firstPlayerCard = func.getDyncamicElementLastChildById('player-container');
-const firstDealerCard = func.getDyncamicElementLastChildById('dealer-container');
+const firstPlayerCard = func.getDyncamicElementLastChildById('player-cards');
+const firstDealerCard = func.getDyncamicElementLastChildById('dealer-cards');
 
 const cardBackSrc = '../assets/img/back.png';
 
@@ -111,8 +111,14 @@ const getDeckInfo = async () => {
 // Action on deck cards remaining
 const checkDeck = (remaining) => {
     if (remaining === deckMaxCard - 1) {
+        window.document.getElementById('stopGame').addEventListener('click', game.stop, { once: true })
         window.document.getElementById('shuffleDeck').addEventListener('click', game.shuffle);
+        func.disabledElementById('stopGame', false);
         func.disabledElementById('shuffleDeck', false);
+    }
+    else if (remaining === 1) {
+        window.document.getElementById('shuffleDeck').removeEventListener('click', game.shuffle);
+        func.disabledElementById('shuffleDeck', true);
     }
     else if (remaining === 0) {
         window.document.getElementById('stopGame').removeEventListener('click', game.stop);
@@ -177,7 +183,7 @@ const playerReturnCardToDeck = async () => {
     let card_inner = firstPlayerCard().querySelector('.card-inner');
     card_inner.style.transform = null;
 
-    await func.sleep(500);
+    await func.sleep(400);
 
     cardRemainingElement().innerHTML = remaining;
     deckAreaElement().append(firstPlayerCard());
@@ -200,9 +206,9 @@ const playerFlipCard = async () => {
 
     card_front.src = drawCard[0].image;
 
-    anim.flipCard(card_inner, `300ms`);
+    anim.flipCard(card_inner, `200ms`);
 
-    await func.sleep(300);
+    await func.sleep(200);
 
     checkDeck(remaining);
 
@@ -283,6 +289,7 @@ const keydownListener = (event) => {
             break;
         // Shuffle deck card
         case 'r':
+            addCardIntoDealerArea();
             break;
     }
 }
