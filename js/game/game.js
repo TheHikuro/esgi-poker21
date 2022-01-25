@@ -1,7 +1,7 @@
 import { deck } from '../deck/index.js';
 import { user } from '../user/index.js'
 import { func, modalWin } from '../generic/index.js';
-import { navbar } from './index.js'
+import { navbar, player } from './index.js'
 import { anim } from '../animations/index.js';
 
 const newGameElement = func.getDynamicElementById('newGame');
@@ -18,6 +18,7 @@ const init = async () => {
     else{
         user.init();
         navbar.init();
+        player.init();
         newGameElement().addEventListener('click', start , { once: true });
         modalElement().addEventListener('click', () => {
             modalWin();
@@ -27,6 +28,8 @@ const init = async () => {
 
 // Launch game and update navbar buttons
 const start = async () => {
+    localStorage.removeItem('deckId');
+    localStorage.setItem('playerTurn', false);
     func.hideElementById('newGame', true);
     func.hideElementById('stopGame', false);
     func.disabledElementById('stopGame', true);
@@ -52,6 +55,7 @@ const restart = async () => {
 
 // Restore deck on new game
 const reset = async () => {
+    localStorage.setItem('playerTurn', false);
     deck.reset();
     func.hideElementById('newGame', true);
     func.hideElementById('stopGame', false);
@@ -60,6 +64,7 @@ const reset = async () => {
 
 // Save Game state
 const save = () => {
+    console.log('save');
     localStorage.setItem('gameState', window.document.body.outerHTML);
 }
 

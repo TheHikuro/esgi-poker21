@@ -6,6 +6,9 @@ import { game } from '../game/index.js';
 const playerAreaElement = func.getDynamicElementById('player-cards');
 const dealerAreaElement = func.getDynamicElementById('dealer-cards');
 
+const playerScoreElement = func.getDynamicElementById('player-score');
+const dealerScoreElement = func.getDynamicElementById('dealer-score');
+
 const deckAreaElement = func.getDynamicElementById('deck');
 const cardRemainingElement = func.getDynamicElementById('deck-count');
 
@@ -22,6 +25,12 @@ let deckId = localStorage.getItem('deckId');
 const init = async () => {
     deckId = !func.haveDeckId() ? await api.getDeck() : localStorage.getItem('deckId');
     const { remaining } = await getDeckInfo();
+
+    if(firstDealerCard()){
+        if(firstDealerCard().querySelector('.card-inner').querySelector('.card-front').src){
+            remaining--;
+        }
+    }
 
     cardRemainingElement().innerHTML = remaining;
 
@@ -43,12 +52,30 @@ const init = async () => {
     // Wait end of animation
     await func.sleep(1000);
 
-    if(firstDeckCard()){
+    if(firstDeckCard() && JSON.parse(localStorage.getItem('playerTurn')) === true){
         game.save();
 
         firstDeckCard().event = true;
         firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
         window.document.addEventListener('keydown', keydownListener);
+    }
+    else if(firstDeckCard() && JSON.parse(localStorage.getItem('playerTurn')) === false){
+        await func.sleep(250);
+        if(!firstDealerCard()){
+            await addCardIntoDealerArea();
+            await dealerFlipCard();
+            await func.sleep(250);
+            await addCardIntoDealerArea();
+            localStorage.setItem('playerTurn', true);
+
+            if(firstDeckCard()){
+                firstDeckCard().event = true;
+                firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
+                window.document.addEventListener('keydown', keydownListener);
+            }
+
+            game.save();
+        }
     }
 }
 
@@ -84,14 +111,14 @@ const reset = async () => {
 
 // Load all deck event listener
 const loadEventsListener = async () => {
-    // deckId = !func.haveDeckId() ? await api.getDeck() : localStorage.getItem('deckId');
     window.document.addEventListener('keydown', keydownListener);
-    if(firstDeckCard()){
+    if(firstDeckCard() && JSON.parse(localStorage.getItem('playerTurn')) === true){
         firstDeckCard().event = true;
         firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
     }
 }
 
+// Shuffle deck card with animation
 const shuffle = () => {
     deckAreaElement().childNodes.forEach(card => {
         card.style['animation-name'] = null;
@@ -110,7 +137,7 @@ const getDeckInfo = async () => {
 
 // Action on deck cards remaining
 const checkDeck = (remaining) => {
-    if (remaining === deckMaxCard - 1) {
+    if (remaining === deckMaxCard - 2) {
         window.document.getElementById('stopGame').addEventListener('click', game.stop, { once: true })
         window.document.getElementById('shuffleDeck').addEventListener('click', game.shuffle);
         func.disabledElementById('stopGame', false);
@@ -132,7 +159,9 @@ const checkDeck = (remaining) => {
 
 // Add deck card into player area
 const addCardIntoPlayerArea = async () => {
-    firstDeckCard().event = undefined;
+    if(firstDeckCard()){
+        firstDeckCard().event = undefined;
+    }
     const { remaining } = await getDeckInfo();
     cardRemainingElement().innerHTML = remaining - 1;
 
@@ -154,8 +183,10 @@ const addCardIntoPlayerArea = async () => {
 
 // Add deck card into dealer area
 const addCardIntoDealerArea = async () => {
-    firstDeckCard().event = undefined;
-    firstDeckCard().removeEventListener('click', addCardIntoPlayerArea);
+    if(firstDeckCard()){
+        firstDeckCard().event = undefined;
+        firstDeckCard().removeEventListener('click', addCardIntoPlayerArea);
+    }
     const { remaining } = await getDeckInfo();
     cardRemainingElement().innerHTML = remaining - 1;
 
@@ -171,9 +202,6 @@ const addCardIntoDealerArea = async () => {
     await func.sleep(400);
 
     cardRemainingElement().innerHTML = remaining - 1;
-
-    firstDeckCard().event = true;
-    firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
 }
 
 // Return last player card to deck
@@ -202,6 +230,10 @@ const playerFlipCard = async () => {
     const drawCard = await api.drawCardFromDeck(deckId, 1);
     const cardValues = func.getCardValues(drawCard[0].code);
 
+    localStorage.setItem('playerScore', JSON.parse(localStorage.getItem('playerScore')) + cardValues[0]);
+    const score = localStorage.getItem('playerScore');
+    playerScoreElement().innerHTML = score;
+
     const { remaining } = await getDeckInfo();
 
     card_front.src = drawCard[0].image;
@@ -210,12 +242,35 @@ const playerFlipCard = async () => {
 
     await func.sleep(200);
 
+    if(score > 21){
+        alert('player loose 😒');
+    }
+
     checkDeck(remaining);
 
     if (firstDeckCard()) {
         firstDeckCard().event = true;
         firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
     }
+}
+
+// Dealer flip card
+const dealerFlipCard = async () => {
+    let card_inner = firstDealerCard().querySelector('.card-inner');
+    let card_front = card_inner.querySelector('.card-front');
+
+    const drawCard = await api.drawCardFromDeck(deckId, 1);
+    const cardValues = func.getCardValues(drawCard[0].code);
+
+    localStorage.setItem('dealerScore', JSON.parse(localStorage.getItem('dealerScore')) + cardValues[0]);
+    const score = localStorage.getItem('dealerScore');
+    dealerScoreElement().innerHTML = score;
+
+    card_front.src = drawCard[0].image;
+
+    anim.flipCard(card_inner, `200ms`);
+
+    await func.sleep(200);
 }
 
 // Recursive player card return
@@ -289,7 +344,6 @@ const keydownListener = (event) => {
             break;
         // Shuffle deck card
         case 'r':
-            addCardIntoDealerArea();
             break;
     }
 }

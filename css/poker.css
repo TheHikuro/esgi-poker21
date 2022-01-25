@@ -236,6 +236,13 @@ body {
   background-position: center;
 }
 
+.player-buttons,
+.player-buttons {
+  display: flex;
+  justify-content: end;
+  padding-top: 30px;
+}
+
 .deck-count {
   font-size: 2rem;
   color: #fff;
