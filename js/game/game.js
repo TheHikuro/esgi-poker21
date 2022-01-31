@@ -2,13 +2,12 @@ import { deck } from '../deck/index.js';
 import { user } from '../user/index.js'
 import { func, modalWin } from '../generic/index.js';
 import { navbar, player } from './index.js'
-import { anim } from '../animations/index.js';
 
 const newGameElement = func.getDynamicElementById('newGame');
 const stopGameElement = func.getDynamicElementById('stopGame');
 const shuffleElement = func.getDynamicElementById('shuffleDeck');
 const modalElement = func.getDynamicElementById('modalTest');
-
+const playerStandElement = func.getDynamicElementById('playerStand');
 
 // Add start EventListener
 const init = async () => {
@@ -55,16 +54,18 @@ const restart = async () => {
 
 // Restore deck on new game
 const reset = async () => {
-    localStorage.setItem('playerTurn', false);
+    const username = localStorage.getItem('username');
+    localStorage.clear();
+    localStorage.setItem('username', username);
     deck.reset();
     func.hideElementById('newGame', true);
     func.hideElementById('stopGame', false);
     func.disabledElementById('stopGame', true);
+    func.hideElementById('playerStand', true);
 }
 
 // Save Game state
 const save = () => {
-    console.log('save');
     localStorage.setItem('gameState', window.document.body.outerHTML);
 }
 
@@ -76,17 +77,20 @@ const loadSave = async () => {
         await func.sleep(250);
         window.document.getElementById('username').parentNode.addEventListener('click', user.logout, false);
         await deck.init();
-        await deck.loadEventsListener();
 
         switch(false){
             case newGameElement().disabled:
-                newGameElement().addEventListener('click', reset, { onece: true });
+                newGameElement().addEventListener('click', reset, { once: true });
             case stopGameElement().disabled:
-                stopGameElement().addEventListener('click', stop, { onece: true });
+                stopGameElement().addEventListener('click', stop, { once: true });
             case shuffleElement().disabled:
-                shuffleElement().addEventListener('click', shuffle, { onece: true });
+                shuffleElement().addEventListener('click', shuffle, { once: true });
             case modalElement().disabled:
                 modalElement().addEventListener('click', modalWin)
+        }
+
+        if(!playerStandElement().disabled && JSON.parse(localStorage.getItem('playerStand')) != true && JSON.parse(localStorage.getItem('gameEnd')) != true){
+            playerStandElement().addEventListener('click', deck.playerStand, { once: true });
         }
     }
 }
@@ -95,10 +99,33 @@ const loadSave = async () => {
 const shuffle = async () => {
     shuffleElement().removeEventListener('click', shuffle);
     func.disabledElementById('shuffleDeck', true);
-    await deck.shuffle();
-    //await shuffle animation
+    deck.shuffle();
+    await func.sleep(750);
     func.disabledElementById('shuffleDeck', false);
     shuffleElement().addEventListener('click', shuffle);
 }
 
-export { init, start, stop, restart, reset, save, loadSave, shuffle }
+const scoreTrigger = () => {
+    const dealerScore = JSON.parse(localStorage.getItem('dealerScore'));
+    const playerScore = JSON.parse(localStorage.getItem('playerScore'));
+    const playerStand = JSON.parse(localStorage.getItem('playerStand'));
+    const dealerStand = JSON.parse(localStorage.getItem('dealerStand'));
+    const playerTurn = JSON.parse(localStorage.getItem('playerTurn'));
+
+    if(playerScore > 21 && playerTurn === true || dealerScore > playerScore && dealerScore <= 21 && playerStand === true && dealerStand == true){
+        playerStandElement().removeEventListener('click', deck.playerStand);
+        localStorage.setItem('gameEnd', true);
+        alert('loose 😒');
+    }
+    else if((dealerScore > 21 || playerScore > dealerScore) && playerStand === true && dealerStand === true){
+        localStorage.setItem('gameEnd', true);
+        alert('win 😊');
+    }
+    else if(playerScore === 21){
+        playerStandElement().removeEventListener('click', deck.playerStand);
+        localStorage.setItem('gameEnd', true);
+        alert('blackjack 🃏')
+    }
+}
+
+export { init, start, stop, restart, reset, save, loadSave, shuffle, scoreTrigger }
