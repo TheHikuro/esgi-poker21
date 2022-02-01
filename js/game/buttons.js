@@ -35,6 +35,17 @@ const buttons = {
                 hide: false
             }
         }
+    ],
+    player: [
+        {
+            value: 'Stand',
+            id: 'playerStand',
+            class: 'btn',
+            rules: {
+                disabled: false,
+                hide: true
+            } 
+        }
     ]
 }
 
@@ -43,4 +54,8 @@ const navbar = () => {
     return buttons.navbar;
 }
 
-export { navbar }
+const player = () => {
+    return buttons.player;
+}
+
+export { navbar, player }

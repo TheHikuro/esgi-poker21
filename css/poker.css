@@ -130,9 +130,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: end;
+  justify-content: center;
   width: 15%;
-  height: 100%;
+  height: 40%;
 }
 
 .card {
@@ -168,16 +168,22 @@ body {
   transform: rotateY(180deg);
 }
 
+.deck {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70%;
+  width: 100%;
+}
+
 .deck .card {
   position: absolute;
-  left: 3rem;
-  top: 40%;
-  cursor: pointer;
 }
 
 .deck .card:last-child {
   clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 0, 100% 0);
   transition: clip-path 500ms;
+  cursor: pointer;
 }
 
 .deck .card:last-child::before {
@@ -204,22 +210,46 @@ body {
   z-index: 1;
 } */
 
-.dealer-container .card,
-.player-container .card {
-  margin: 0px 0px 0px 5px !important;
+.dealer-cards,
+.player-cards {
+  display: flex;
+  flex-direction: row;
+  width: 90%;
+  margin-right: -80px;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.dealer-score,
+.player-score {
+  width: 100%;
+  text-align: center;
+  padding-bottom: 30px;
+  font-size: 2rem;
+  color: #fff;
+}
+
+.dealer-cards .card,
+.player-cards .card {
+  vertical-align: middle;
+  margin: 0px 0px 0px -80px !important;
   cursor: pointer;
   background-size: cover;
   background-position: center;
 }
 
+.dealer-buttons,
+.player-buttons {
+  display: flex;
+  justify-content: end;
+}
+
 .deck-count {
+  width: 100%;
+  height: 30%;
+  text-align: center;
   font-size: 2rem;
   color: #fff;
-  display: flex;
-  justify-content: space-evenly;
-  flex-direction: column;
-  align-items: center;
-  height: 30vh;
 }
 
 .cards-container {
@@ -234,21 +264,21 @@ body {
 
 .dealer-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 50%;
+  height: 40%;
   background: rgba(29, 78, 238, 0.336);
 }
 
 .player-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 50%;
+  height: 40%;
   background: rgba(180, 243, 6, 0.336);
 }
 
@@ -302,11 +332,6 @@ body {
     backface-visibility: hidden;
   }
 
-  .deck .card {
-    top: 23em;
-    left: 1.5em;
-  }
-
   .deck-container {
     width: 30%;
   }
@@ -315,10 +340,7 @@ body {
     width: 60%;
   }
 
-  .dealer-container {
-    width: 100%;
-  }
-
+  .dealer-container,
   .player-container {
     width: 100%;
   }
