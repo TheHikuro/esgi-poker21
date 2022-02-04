@@ -1,7 +1,3 @@
-.board-container{
-    font-family: "Montserrat", sans-serif;
-}
-
 .info-score{
     width: 100%;
     height: 20%;
@@ -9,7 +5,8 @@
 
 .info-history{
     width: 100%;
-    height: 80%;
+    height: 500px;
+    overflow: scroll;
 }
 
 .score-title{
@@ -18,17 +15,37 @@
     text-decoration: underline;
 }
 
-.title-win{
+.title-win, .title-lose, .title-blackjack{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-evenly;
     font-size: 16px;
-    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-weight: bold;
 }
 
-.title-lose{
-    font-size: 16px;
+.score-win, .score-lose, .score-blackjack{
+    font-size: 14px;
     text-align: center;
+    font-weight: normal;
 }
 
-.title-blackjack{
-    font-size: 16px;
-    text-align: center;
+.info-blackjack{
+    font-weight: bold;
+    font-style: italic;
+    margin-left: 5px;
+    margin-right: 5px;
+    color: yellow;
+}
+.info-win{
+    color: yellowgreen;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.info-lose{
+    color: tomato;
+    margin-left: 5px;
+    margin-right: 5px;
 }

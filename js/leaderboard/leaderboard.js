@@ -74,7 +74,7 @@ const getBlackJackResult = () => {
 
   //met à jour le score
   const score_blackjack = func.getDynamicElementById("score-blackjack");
-  score_blackjack().innerHTML = localStorage.getItem("nbBlackJack");
+  score_blackjack().innerHTML = localStorage.getItem("nbBlackJackWin");
 
   //info loose
   const info_blackjack = func.createHtmlElement("p", "info-blackjack", [
@@ -131,7 +131,7 @@ const getLooseResult = (playerScore, dealerScore) => {
   score_lose().innerHTML = localStorage.getItem("nbLoose");
 
   //info loose
-  const info_loose = func.createHtmlElement("p", "info-loose", ["info-loose"]);
+  const info_loose = func.createHtmlElement("p", "info-lose", ["info-lose"]);
 
   let result =
     "Vous avez perdu ! <br />" +
