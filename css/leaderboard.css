@@ -1,0 +1,34 @@
+.board-container{
+    font-family: "Montserrat", sans-serif;
+}
+
+.info-score{
+    width: 100%;
+    height: 20%;
+}
+
+.info-history{
+    width: 100%;
+    height: 80%;
+}
+
+.score-title{
+    font-size: 22px;
+    text-align: center;
+    text-decoration: underline;
+}
+
+.title-win{
+    font-size: 16px;
+    text-align: center;
+}
+
+.title-lose{
+    font-size: 16px;
+    text-align: center;
+}
+
+.title-blackjack{
+    font-size: 16px;
+    text-align: center;
+}

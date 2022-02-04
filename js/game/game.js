@@ -2,6 +2,7 @@ import { deck } from '../deck/index.js';
 import { user } from '../user/index.js'
 import { func, modalWin } from '../generic/index.js';
 import { navbar, player } from './index.js'
+import { leaderboard } from "../leaderboard/index.js";
 
 const newGameElement = func.getDynamicElementById('newGame');
 const stopGameElement = func.getDynamicElementById('stopGame');
@@ -18,6 +19,7 @@ const init = async () => {
         user.init();
         navbar.init();
         player.init();
+        leaderboard.infoScorePlayer();
         newGameElement().addEventListener('click', start , { once: true });
         modalElement().addEventListener('click', () => {
             modalWin();
@@ -27,12 +29,12 @@ const init = async () => {
 
 // Launch game and update navbar buttons
 const start = async () => {
-    localStorage.removeItem('deckId');
-    localStorage.setItem('playerTurn', false);
-    func.hideElementById('newGame', true);
-    func.hideElementById('stopGame', false);
-    func.disabledElementById('stopGame', true);
-    deck.init();
+  localStorage.removeItem("deckId");
+  localStorage.setItem("playerTurn", false);
+  func.hideElementById("newGame", true);
+  func.hideElementById("stopGame", false);
+  func.disabledElementById("stopGame", true);
+  deck.init();
 }
 
 // Stop game and update navbar buttons
@@ -55,8 +57,17 @@ const restart = async () => {
 // Restore deck on new game
 const reset = async () => {
     const username = localStorage.getItem('username');
+
+    const score_win = localStorage.getItem("nbWin");
+    const score_black_jack = localStorage.getItem("nbBlackJackWin");
+    const score_loose = localStorage.getItem("nbLoose");
+
     localStorage.clear();
     localStorage.setItem('username', username);
+    localStorage.setItem("nbWin", score_win);
+    localStorage.setItem("nbBlackJackWin", score_black_jack);
+    localStorage.setItem("nbLoose", score_loose);
+    
     deck.reset();
     func.hideElementById('newGame', true);
     func.hideElementById('stopGame', false);
@@ -115,16 +126,43 @@ const scoreTrigger = () => {
     if(playerScore > 21 && playerTurn === true || dealerScore > playerScore && dealerScore <= 21 && playerStand === true && dealerStand == true){
         playerStandElement().removeEventListener('click', deck.playerStand);
         localStorage.setItem('gameEnd', true);
+
+        //set le nombre de loose en local
+        localStorage.setItem(
+          "nbLoose",
+          JSON.parse(localStorage.getItem("nbLoose")) + 1
+        );
+
         alert('loose 😒');
+
+        leaderboard.getLooseResult(playerScore, dealerScore);
     }
     else if((dealerScore > 21 || playerScore > dealerScore) && playerStand === true && dealerStand === true){
-        localStorage.setItem('gameEnd', true);
-        alert('win 😊');
+      localStorage.setItem("gameEnd", true);
+
+      //set le nombre de win en local
+      localStorage.setItem(
+        "nbWin",
+        JSON.parse(localStorage.getItem("nbWin")) + 1
+      );
+
+      alert("win 😊");
+
+      leaderboard.getWinResult(playerScore, dealerScore);
     }
     else if(playerScore === 21){
-        playerStandElement().removeEventListener('click', deck.playerStand);
-        localStorage.setItem('gameEnd', true);
-        alert('blackjack 🃏')
+      playerStandElement().removeEventListener("click", deck.playerStand);
+      localStorage.setItem("gameEnd", true);
+
+      //set le nombre de win en local
+      localStorage.setItem(
+        "nbBlackJackWin",
+        JSON.parse(localStorage.getItem("nbBlackJackWin")) + 1
+      );
+
+      alert("blackjack 🃏");
+
+      leaderboard.getBlackJackResult();
     }
 }
 

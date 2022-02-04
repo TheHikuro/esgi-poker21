@@ -2,7 +2,6 @@ import { func } from '../generic/index.js';
 import { anim } from '../animations/index.js';
 import { api } from '../api/index.js';
 import { game } from '../game/index.js';
-import { leaderboard } from "../leaderboard/index.js";
 
 const playerAreaElement = func.getDynamicElementById('player-cards');
 const dealerAreaElement = func.getDynamicElementById('dealer-cards');
@@ -19,7 +18,6 @@ const firstDealerCard = func.getDyncamicElementLastChildById('dealer-cards');
 
 const playerStandElement = func.getDynamicElementById('playerStand');
 
-const boardAreaElement = func.getDynamicElementById('board-container');
 
 const cardBackSrc = '../assets/img/back.png';
 
@@ -255,8 +253,6 @@ const playerFlipCard = async () => {
 
     // Display win / loose 
     game.scoreTrigger();
-
-    leaderboard.infoScorePlayer();
 
     checkDeck(remaining);
 
