@@ -83,6 +83,12 @@ const init = async () => {
             playerStand();
         }
     }
+
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", shakeListener, false);
+    } else {
+      console.log("shake not supported");
+    }
 }
 
 // Stop game, remove event listener
@@ -158,7 +164,9 @@ const checkDeck = (remaining) => {
 const addCardIntoPlayerArea = async () => {
 
     //vibration
-    vibration.vibrationAddingCard();
+    document.addEventListener('click', () => {
+        vibration.vibrationAddingCard();
+    });
 
     if(firstDeckCard()){
         firstDeckCard().event = undefined;
@@ -396,5 +404,25 @@ const keydownListener = (event) => {
             break;
     }
 }
+
+
+const shakeListener = (event) => {
+
+    if (firstDeckCard()) {
+        if (firstDeckCard().event === true) {
+
+            firstDeckCard().event = undefined;
+
+            if (event.alpha >= 50) {
+                addCardIntoPlayerArea();
+            }
+        }else{
+            if (event.alpha <= -50) {
+              playerReturnCardToDeck();
+            }
+        }
+    }
+};
+
 
 export { init, stop ,reset, shuffle, getDeckInfo, playerStand ,keydownListener }
