@@ -19,7 +19,7 @@ const init = async () => {
         user.init();
         navbar.init();
         player.init();
-        leaderboard.infoScorePlayer();
+        leaderboard.init();
         newGameElement().addEventListener('click', start , { once: true });
         modalElement().addEventListener('click', () => {
             modalWin();

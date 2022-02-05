@@ -1,6 +1,6 @@
 import { func } from "../generic/index.js";
 
-const infoScorePlayer = () => {
+const init = () => {
   const boardAreaElement = func.getDynamicElementById("board-container");
 
   //leaderboard
@@ -151,4 +151,4 @@ const getLooseResult = (playerScore, dealerScore) => {
 
 
 
-export { infoScorePlayer, getBlackJackResult, getLooseResult, getWinResult };
+export { init, getBlackJackResult, getLooseResult, getWinResult };
