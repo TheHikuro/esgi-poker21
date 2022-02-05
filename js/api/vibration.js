@@ -2,7 +2,7 @@
 //vibration lors d'une victoire
 const vibrationWin = () => {
   if (window.navigator.vibrate) {
-    window.navigator.vibrate([100, 100, 100]);
+    window.navigator.vibrate([200, 200, 200]);
   } else {
     // Le navigateur ne supporte pas l'événement de vibration
   }
@@ -11,7 +11,7 @@ const vibrationWin = () => {
 // vibration lors d'une défaite
 const vibrationLose =  () => {
   if (window.navigator.vibrate) {
-    window.navigator.vibrate([300, 200, 100, 50, 50]);
+    window.navigator.vibrate([300, 100, 300, 100, 300, 200, 1000, 200, 100]);
   } else {
     // Le navigateur ne supporte pas l'événement de vibration
   }

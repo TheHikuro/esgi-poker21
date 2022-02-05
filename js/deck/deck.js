@@ -1,6 +1,6 @@
 import { func } from '../generic/index.js';
 import { anim } from '../animations/index.js';
-import { api } from '../api/index.js';
+import { api, vibration } from '../api/index.js';
 import { game } from '../game/index.js';
 
 const playerAreaElement = func.getDynamicElementById('player-cards');
@@ -156,6 +156,10 @@ const checkDeck = (remaining) => {
 
 // Add deck card into player area
 const addCardIntoPlayerArea = async () => {
+
+    //vibration
+    vibration.vibrationAddingCard();
+
     if(firstDeckCard()){
         firstDeckCard().event = undefined;
     }
