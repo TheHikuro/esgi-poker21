@@ -29,7 +29,7 @@ const init = async () => {
     let { remaining } = await getDeckInfo();
 
     if(firstDealerCard()){
-        if(firstDealerCard().querySelector('.card-inner').querySelector('.card-front').src){
+        if(!firstDealerCard().querySelector('.card-inner').querySelector('.card-front').src){
             remaining--;
         }
     }
