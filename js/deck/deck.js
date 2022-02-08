@@ -18,6 +18,7 @@ const firstDealerCard = func.getDyncamicElementLastChildById('dealer-cards');
 
 const playerStandElement = func.getDynamicElementById('playerStand');
 
+
 const cardBackSrc = '../assets/img/back.png';
 
 let deckMaxCard = 52;
@@ -259,6 +260,7 @@ const playerFlipCard = async () => {
         firstDeckCard().event = true;
         firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
     }
+
 }
 
 // Dealer flip card

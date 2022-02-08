@@ -29,7 +29,7 @@ const Modal = (m_title, content) => {
 }
 
 const modalWin = () => {
-    const array = ['Vous avez gangé', '2-10 contre dealer']
+    const array = ['Vous avez gagné', '2-10 contre dealer']
     Modal('Victory 🥳', array.join('<br>'));
 }
 

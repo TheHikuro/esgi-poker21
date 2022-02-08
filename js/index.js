@@ -8,6 +8,11 @@ valueFromForm.addEventListener('submit', function(event) {
     if(username.value !== localStorage.getItem('username')){
         localStorage.clear();
         localStorage.setItem('username', username.value);
+
+        //set score player
+        localStorage.setItem("nbWin", 0);
+        localStorage.setItem("nbBlackJackWin", 0);
+        localStorage.setItem("nbLoose", 0);
     }
     username.innerHTML = ''
     window.location.href = '../html/game-page.html';
