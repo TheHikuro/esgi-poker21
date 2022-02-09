@@ -61,6 +61,7 @@ const flipCard = (card, time) => {
 }
 
 const winAnimation = (winOrLose) => {
+    console.log('tamer')
     const backContainer = func.createHtmlElement('div', 'backContainer', ['backContainer']);
     const textContainer = func.createHtmlElement('div', 'textContainer', ['textContainer']);
     const arrOfText = ['You win', 'You lose'];
@@ -94,7 +95,7 @@ const winAnimation = (winOrLose) => {
 
     text.addEventListener('animationend', () => {
         backContainer.remove();
-        game.save()
+        game.save();
     })
     imgBlacJack.addEventListener('animationend', () => {
         setTimeout(() => {
