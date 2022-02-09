@@ -10,6 +10,7 @@ const stopGameElement = func.getDynamicElementById('stopGame');
 const shuffleElement = func.getDynamicElementById('shuffleDeck');
 const modalElement = func.getDynamicElementById('modalTest');
 const playerStandElement = func.getDynamicElementById('playerStand');
+const newRoundElement = func.getDynamicElementById('nextRound');
 
 // Add start EventListener
 const init = async () => {
@@ -74,6 +75,21 @@ const reset = async () => {
     func.hideElementById('stopGame', false);
     func.disabledElementById('stopGame', true);
     func.hideElementById('playerStand', true);
+    func.disabledElementById('playerStand', false);
+}
+
+const newRound = async () => {
+    localStorage.removeItem('gameEnd');
+    localStorage.removeItem('playerStand');
+    localStorage.removeItem('dealerStand');
+    localStorage.removeItem('dealerScore');
+    localStorage.removeItem('playerScore');
+    func.disabledElementById('nextRound', true);
+    func.hideElementById('nextRound', true);
+    func.disabledElementById('playerStand', false);
+    func.hideElementById('playerStand', true);
+    deck.reset();
+    save();
 }
 
 // Save Game state
@@ -90,15 +106,20 @@ const loadSave = async () => {
         window.document.getElementById('username').parentNode.addEventListener('click', user.logout, false);
         await deck.init();
 
-        switch(false){
-            case newGameElement().disabled:
-                newGameElement().addEventListener('click', reset, { once: true });
-            case stopGameElement().disabled:
-                stopGameElement().addEventListener('click', stop, { once: true });
-            case shuffleElement().disabled:
-                shuffleElement().addEventListener('click', shuffle, { once: true });
-            case modalElement().disabled:
-                modalElement().addEventListener('click', modalWin)
+        if(!newGameElement().disabled){
+            newGameElement().addEventListener('click', reset, { once: true }); 
+        }
+        if(!stopGameElement().disabled){
+            stopGameElement().addEventListener('click', stop, { once: true }); 
+        }
+        if(!shuffleElement().disabled){
+            shuffleElement().addEventListener('click', shuffle, { once: true }); 
+        }
+        if(!modalElement().disabled){
+            modalElement().addEventListener('click', modalWin, { once: true }); 
+        }
+        if(!newRoundElement().disabled){
+            newRoundElement().addEventListener('click', newRound, { once: true }); 
         }
 
         if(!playerStandElement().disabled && JSON.parse(localStorage.getItem('playerStand')) != true && JSON.parse(localStorage.getItem('gameEnd')) != true){
@@ -167,6 +188,14 @@ const scoreTrigger = () => {
       alert("blackjack 🃏");
 
       leaderboard.getBlackJackResult();
+    }
+
+    if(JSON.parse(localStorage.getItem('gameEnd')) === true){
+        func.disabledElementById('playerStand', true);
+        newRoundElement().addEventListener('click', newRound, { once: true });
+        func.hideElementById('nextRound', false);
+        func.disabledElementById('nextRound', false)
+        save();
     }
 }
 

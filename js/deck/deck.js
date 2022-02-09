@@ -67,7 +67,20 @@ const init = async () => {
         if(!firstDealerCard()){
             await addCardIntoDealerArea();
             await dealerFlipCard();
+            game.save();
             await func.sleep(250);
+            await addCardIntoDealerArea();
+            localStorage.setItem('playerTurn', true);
+
+            if(firstDeckCard()){
+                firstDeckCard().event = true;
+                firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
+                window.document.addEventListener('keydown', keydownListener);
+            }
+
+            game.save();
+        }
+        else if (dealerAreaElement().childElementCount === 1){
             await addCardIntoDealerArea();
             localStorage.setItem('playerTurn', true);
 
@@ -338,6 +351,7 @@ const returnAllDealerCards = async () => {
 }
 
 const playerStand = async () => {
+    func.disabledElementById('playerStand', true);
     localStorage.setItem('playerStand', true);
     localStorage.setItem('playerTurn', false);
     
@@ -424,4 +438,4 @@ const shakeListener = (event) => {
 };
 
 
-export { init, stop ,reset, shuffle, getDeckInfo, playerStand ,keydownListener }
+export { init, stop ,reset, shuffle, getDeckInfo, playerStand, keydownListener }
