@@ -3,6 +3,7 @@ import { user } from '../user/index.js'
 import { func, modalWin } from '../generic/index.js';
 import { navbar, player } from './index.js'
 import { leaderboard } from "../leaderboard/index.js";
+import { vibration } from "../api/index.js";
 
 const newGameElement = func.getDynamicElementById('newGame');
 const stopGameElement = func.getDynamicElementById('stopGame');
@@ -133,6 +134,7 @@ const scoreTrigger = () => {
           JSON.parse(localStorage.getItem("nbLoose")) + 1
         );
 
+        vibration.vibrationLose();
         alert('loose 😒');
 
         leaderboard.getLooseResult(playerScore, dealerScore);
@@ -146,6 +148,7 @@ const scoreTrigger = () => {
         JSON.parse(localStorage.getItem("nbWin")) + 1
       );
 
+      vibration.vibrationWin();
       alert("win 😊");
 
       leaderboard.getWinResult(playerScore, dealerScore);
@@ -160,6 +163,7 @@ const scoreTrigger = () => {
         JSON.parse(localStorage.getItem("nbBlackJackWin")) + 1
       );
 
+      vibration.vibrationWin();
       alert("blackjack 🃏");
 
       leaderboard.getBlackJackResult();

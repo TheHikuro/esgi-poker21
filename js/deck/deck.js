@@ -1,6 +1,6 @@
 import { func } from '../generic/index.js';
 import { anim } from '../animations/index.js';
-import { api } from '../api/index.js';
+import { api, vibration } from '../api/index.js';
 import { game } from '../game/index.js';
 
 const playerAreaElement = func.getDynamicElementById('player-cards');
@@ -83,6 +83,12 @@ const init = async () => {
             playerStand();
         }
     }
+
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", shakeListener, false);
+    } else {
+      console.log("shake not supported");
+    }
 }
 
 // Stop game, remove event listener
@@ -156,6 +162,12 @@ const checkDeck = (remaining) => {
 
 // Add deck card into player area
 const addCardIntoPlayerArea = async () => {
+
+    //vibration
+    document.addEventListener('click', () => {
+        vibration.vibrationAddingCard();
+    });
+
     if(firstDeckCard()){
         firstDeckCard().event = undefined;
     }
@@ -392,5 +404,25 @@ const keydownListener = (event) => {
             break;
     }
 }
+
+
+const shakeListener = (event) => {
+
+    if (firstDeckCard()) {
+        if (firstDeckCard().event === true) {
+
+            firstDeckCard().event = undefined;
+
+            if (event.alpha >= 50) {
+                addCardIntoPlayerArea();
+            }
+        }else{
+            if (event.alpha <= -50) {
+              playerReturnCardToDeck();
+            }
+        }
+    }
+};
+
 
 export { init, stop ,reset, shuffle, getDeckInfo, playerStand ,keydownListener }
