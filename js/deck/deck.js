@@ -162,11 +162,8 @@ const checkDeck = (remaining) => {
 
 // Add deck card into player area
 const addCardIntoPlayerArea = async () => {
-
     //vibration
-    document.addEventListener('click', () => {
-        vibration.vibrationAddingCard();
-    });
+    vibration.vibrationAddingCard();
 
     if(firstDeckCard()){
         firstDeckCard().event = undefined;
@@ -405,20 +402,22 @@ const keydownListener = (event) => {
     }
 }
 
-
+// Shake event listener
 const shakeListener = (event) => {
-
-    if (firstDeckCard()) {
-        if (firstDeckCard().event === true) {
-
-            firstDeckCard().event = undefined;
-
-            if (event.alpha >= 50) {
+    if(event.alpha >= 50){
+        if (firstDeckCard()) {
+            if(firstDeckCard().event === true){
+                firstDeckCard().event = undefined;
+                firstDeckCard().removeEventListener('click', addCardIntoPlayerArea);
                 addCardIntoPlayerArea();
             }
-        }else{
-            if (event.alpha <= -50) {
-              playerReturnCardToDeck();
+        }
+    }
+    else if(event.alpha <= -50){
+        if(firstPlayerCard()){
+            if(firstPlayerCard().event === true){
+                firstPlayerCard().event = undefined;
+                playerReturnCardToDeck();
             }
         }
     }
