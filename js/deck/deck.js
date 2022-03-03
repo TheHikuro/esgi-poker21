@@ -182,7 +182,7 @@ const addCardIntoPlayerArea = async () => {
         firstDeckCard().event = undefined;
     }
     const { remaining } = await getDeckInfo();
-    cardRemainingElement().innerHTML = remaining - 1;
+    cardRemainingElement().innerHTML = remaining - 2;
 
     let card_inner = firstDeckCard().querySelector('.card-inner');
     firstDeckCard().style['animation-name'] = null;
@@ -195,7 +195,7 @@ const addCardIntoPlayerArea = async () => {
     
     await func.sleep(400);
 
-    cardRemainingElement().innerHTML = remaining - 1;
+    cardRemainingElement().innerHTML = remaining - 2;
     firstPlayerCard().event = true;
     firstPlayerCard().addEventListener('click', playerFlipCard, { once: true });
 }
@@ -232,7 +232,7 @@ const playerReturnCardToDeck = async () => {
 
     await func.sleep(400);
 
-    cardRemainingElement().innerHTML = remaining;
+    cardRemainingElement().innerHTML = remaining - 1;
     deckAreaElement().append(firstPlayerCard());
     card_inner.style.top = null;
     card_inner.style.left = null;

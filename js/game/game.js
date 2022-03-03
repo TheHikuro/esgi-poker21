@@ -4,6 +4,7 @@ import { func, modalWin } from '../generic/index.js';
 import { navbar, player } from './index.js'
 import { leaderboard } from "../leaderboard/index.js";
 import { vibration } from "../api/index.js";
+import { api } from '../api/index.js';
 
 const newGameElement = func.getDynamicElementById('newGame');
 const stopGameElement = func.getDynamicElementById('stopGame');
@@ -156,6 +157,10 @@ const scoreTrigger = () => {
         );
 
         vibration.vibrationLose();
+        if(playerScore > 21 && playerTurn === true){
+            api.drawCardFromDeck(localStorage.getItem('deckId'), 1);
+        }
+
         alert('loose 😒');
 
         leaderboard.getLooseResult(playerScore, dealerScore);
