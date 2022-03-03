@@ -80,7 +80,7 @@ const reset = async () => {
 }
 
 const newRound = async () => {
-    localStorage.removeItem('gameEnd');
+    localStorage.removeItem('roundEnd');
     localStorage.removeItem('playerStand');
     localStorage.removeItem('dealerStand');
     localStorage.removeItem('dealerScore');
@@ -123,7 +123,7 @@ const loadSave = async () => {
             newRoundElement().addEventListener('click', newRound, { once: true }); 
         }
 
-        if(!playerStandElement().disabled && JSON.parse(localStorage.getItem('playerStand')) != true && JSON.parse(localStorage.getItem('gameEnd')) != true){
+        if(!playerStandElement().disabled && JSON.parse(localStorage.getItem('playerStand')) != true && JSON.parse(localStorage.getItem('roundEnd')) != true){
             playerStandElement().addEventListener('click', deck.playerStand, { once: true });
         }
     }
@@ -139,7 +139,7 @@ const shuffle = async () => {
     shuffleElement().addEventListener('click', shuffle);
 }
 
-const scoreTrigger = () => {
+const scoreTrigger = async () => {
     const dealerScore = JSON.parse(localStorage.getItem('dealerScore'));
     const playerScore = JSON.parse(localStorage.getItem('playerScore'));
     const playerStand = JSON.parse(localStorage.getItem('playerStand'));
@@ -148,7 +148,7 @@ const scoreTrigger = () => {
 
     if(playerScore > 21 && playerTurn === true || dealerScore > playerScore && dealerScore <= 21 && playerStand === true && dealerStand == true){
         playerStandElement().removeEventListener('click', deck.playerStand);
-        localStorage.setItem('gameEnd', true);
+        localStorage.setItem('roundEnd', true);
 
         //set le nombre de loose en local
         localStorage.setItem(
@@ -166,7 +166,7 @@ const scoreTrigger = () => {
         leaderboard.getLooseResult(playerScore, dealerScore);
     }
     else if((dealerScore > 21 || playerScore > dealerScore) && playerStand === true && dealerStand === true){
-      localStorage.setItem("gameEnd", true);
+      localStorage.setItem("roundEnd", true);
 
       //set le nombre de win en local
       localStorage.setItem(
@@ -181,7 +181,7 @@ const scoreTrigger = () => {
     }
     else if(playerScore === 21){
       playerStandElement().removeEventListener("click", deck.playerStand);
-      localStorage.setItem("gameEnd", true);
+      localStorage.setItem("roundEnd", true);
 
       //set le nombre de win en local
       localStorage.setItem(
@@ -195,11 +195,19 @@ const scoreTrigger = () => {
       leaderboard.getBlackJackResult();
     }
 
-    if(JSON.parse(localStorage.getItem('gameEnd')) === true){
+    if(JSON.parse(localStorage.getItem('roundEnd')) === true){
         func.disabledElementById('playerStand', true);
-        newRoundElement().addEventListener('click', newRound, { once: true });
-        func.hideElementById('nextRound', false);
-        func.disabledElementById('nextRound', false)
+        const { remaining } = await deck.getDeckInfo();
+        if(remaining > 3){
+            newRoundElement().addEventListener('click', newRound, { once: true });
+            func.hideElementById('nextRound', false);
+            func.disabledElementById('nextRound', false)
+        }
+        else{
+            alert('game end !');
+            localStorage.setItem('gameEnd', true);
+            deck.checkDeck();
+        }
         save();
     }
 }

@@ -55,14 +55,14 @@ const init = async () => {
     // Wait end of animation
     await func.sleep(1000);
 
-    if(firstDeckCard() && JSON.parse(localStorage.getItem('playerTurn')) === true && JSON.parse(localStorage.getItem('playerStand')) != true && JSON.parse(localStorage.getItem('gameEnd')) != true){
+    if(firstDeckCard() && JSON.parse(localStorage.getItem('playerTurn')) === true && JSON.parse(localStorage.getItem('playerStand')) != true && JSON.parse(localStorage.getItem('roundEnd')) != true){
         game.save();
 
         firstDeckCard().event = true;
         firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
         window.document.addEventListener('keydown', keydownListener);
     }
-    else if(firstDeckCard() && JSON.parse(localStorage.getItem('playerTurn')) === false && JSON.parse(localStorage.getItem('gameEnd')) != true){
+    else if(firstDeckCard() && JSON.parse(localStorage.getItem('playerTurn')) === false && JSON.parse(localStorage.getItem('roundEnd')) != true){
         await func.sleep(250);
         if(!firstDealerCard()){
             await addCardIntoDealerArea();
@@ -163,7 +163,7 @@ const checkDeck = (remaining) => {
         window.document.getElementById('shuffleDeck').removeEventListener('click', game.shuffle);
         func.disabledElementById('shuffleDeck', true);
     }
-    else if (remaining === 0) {
+    else if (remaining === 0 || JSON.parse(localStorage.getItem('gameEnd')) === true){
         window.document.getElementById('stopGame').removeEventListener('click', game.stop);
         func.hideElementById('stopGame', true);
         func.hideElementById('newGame', false);
@@ -274,11 +274,11 @@ const playerFlipCard = async () => {
     }
 
     // Display win / loose 
-    game.scoreTrigger();
+    await game.scoreTrigger();
 
     checkDeck(remaining);
 
-    if (firstDeckCard() && JSON.parse(localStorage.getItem('gameEnd')) != true) {
+    if (firstDeckCard() && JSON.parse(localStorage.getItem('roundEnd')) != true) {
         firstDeckCard().event = true;
         firstDeckCard().addEventListener('click', addCardIntoPlayerArea, { once: true });
     }
@@ -298,7 +298,7 @@ const dealerFlipCard = async () => {
     const playerScore = JSON.parse(localStorage.getItem('playerScore'));
     dealerScoreElement().innerHTML = score;
 
-    if((score > playerScore) && JSON.parse(localStorage.getItem('playerStand')) === true){
+    if(((score > playerScore) && JSON.parse(localStorage.getItem('playerStand')) === true) || !firstDeckCard()){
         localStorage.setItem('dealerStand', true);
     }
 
@@ -309,7 +309,7 @@ const dealerFlipCard = async () => {
     await func.sleep(200);
 
     // Display win / loose 
-    game.scoreTrigger();
+    await game.scoreTrigger();
 }
 
 // Recursive player card return
@@ -368,16 +368,17 @@ const playerStand = async () => {
     else{
         await func.sleep(300);
     }
-    if(!firstDeckCard().querySelector('.card-inner').querySelector('.card-front').src){
+    if(!firstDealerCard().querySelector('.card-inner').querySelector('.card-front').src){
         await dealerFlipCard();
     }
-    while(JSON.parse(localStorage.getItem('dealerScore')) <= JSON.parse(localStorage.getItem('playerScore'))){
+    while(JSON.parse(localStorage.getItem('dealerScore')) <= JSON.parse(localStorage.getItem('playerScore')) && firstDeckCard()){
         await addCardIntoDealerArea();
         await func.sleep(250);
         await dealerFlipCard();
         game.save();
         await func.sleep(250);
-    }}
+    }
+}
 
 // Keyboard event listener
 const keydownListener = (event) => {
@@ -438,4 +439,4 @@ const shakeListener = (event) => {
 };
 
 
-export { init, stop ,reset, shuffle, getDeckInfo, playerStand, keydownListener }
+export { init, stop ,reset, shuffle, getDeckInfo, playerStand, keydownListener, checkDeck }
