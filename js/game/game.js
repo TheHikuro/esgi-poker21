@@ -4,12 +4,14 @@ import { func, modalWin } from '../generic/index.js';
 import { navbar, player } from './index.js'
 import { leaderboard } from "../leaderboard/index.js";
 import { vibration } from "../api/index.js";
+import { api } from '../api/index.js';
 
 const newGameElement = func.getDynamicElementById('newGame');
 const stopGameElement = func.getDynamicElementById('stopGame');
 const shuffleElement = func.getDynamicElementById('shuffleDeck');
 const modalElement = func.getDynamicElementById('modalTest');
 const playerStandElement = func.getDynamicElementById('playerStand');
+const newRoundElement = func.getDynamicElementById('nextRound');
 
 // Add start EventListener
 const init = async () => {
@@ -74,6 +76,21 @@ const reset = async () => {
     func.hideElementById('stopGame', false);
     func.disabledElementById('stopGame', true);
     func.hideElementById('playerStand', true);
+    func.disabledElementById('playerStand', false);
+}
+
+const newRound = async () => {
+    localStorage.removeItem('roundEnd');
+    localStorage.removeItem('playerStand');
+    localStorage.removeItem('dealerStand');
+    localStorage.removeItem('dealerScore');
+    localStorage.removeItem('playerScore');
+    func.disabledElementById('nextRound', true);
+    func.hideElementById('nextRound', true);
+    func.disabledElementById('playerStand', false);
+    func.hideElementById('playerStand', true);
+    deck.reset();
+    save();
 }
 
 // Save Game state
@@ -90,18 +107,23 @@ const loadSave = async () => {
         window.document.getElementById('username').parentNode.addEventListener('click', user.logout, false);
         await deck.init();
 
-        switch(false){
-            case newGameElement().disabled:
-                newGameElement().addEventListener('click', reset, { once: true });
-            case stopGameElement().disabled:
-                stopGameElement().addEventListener('click', stop, { once: true });
-            case shuffleElement().disabled:
-                shuffleElement().addEventListener('click', shuffle, { once: true });
-            case modalElement().disabled:
-                modalElement().addEventListener('click', modalWin)
+        if(!newGameElement().disabled){
+            newGameElement().addEventListener('click', reset, { once: true }); 
+        }
+        if(!stopGameElement().disabled){
+            stopGameElement().addEventListener('click', stop, { once: true }); 
+        }
+        if(!shuffleElement().disabled){
+            shuffleElement().addEventListener('click', shuffle, { once: true }); 
+        }
+        if(!modalElement().disabled){
+            modalElement().addEventListener('click', modalWin, { once: true }); 
+        }
+        if(!newRoundElement().disabled){
+            newRoundElement().addEventListener('click', newRound, { once: true }); 
         }
 
-        if(!playerStandElement().disabled && JSON.parse(localStorage.getItem('playerStand')) != true && JSON.parse(localStorage.getItem('gameEnd')) != true){
+        if(!playerStandElement().disabled && JSON.parse(localStorage.getItem('playerStand')) != true && JSON.parse(localStorage.getItem('roundEnd')) != true){
             playerStandElement().addEventListener('click', deck.playerStand, { once: true });
         }
     }
@@ -117,7 +139,7 @@ const shuffle = async () => {
     shuffleElement().addEventListener('click', shuffle);
 }
 
-const scoreTrigger = () => {
+const scoreTrigger = async () => {
     const dealerScore = JSON.parse(localStorage.getItem('dealerScore'));
     const playerScore = JSON.parse(localStorage.getItem('playerScore'));
     const playerStand = JSON.parse(localStorage.getItem('playerStand'));
@@ -126,7 +148,7 @@ const scoreTrigger = () => {
 
     if(playerScore > 21 && playerTurn === true || dealerScore > playerScore && dealerScore <= 21 && playerStand === true && dealerStand == true){
         playerStandElement().removeEventListener('click', deck.playerStand);
-        localStorage.setItem('gameEnd', true);
+        localStorage.setItem('roundEnd', true);
 
         //set le nombre de loose en local
         localStorage.setItem(
@@ -135,12 +157,16 @@ const scoreTrigger = () => {
         );
 
         vibration.vibrationLose();
+        if(playerScore > 21 && playerTurn === true){
+            api.drawCardFromDeck(localStorage.getItem('deckId'), 1);
+        }
+
         alert('loose 😒');
 
         leaderboard.getLooseResult(playerScore, dealerScore);
     }
     else if((dealerScore > 21 || playerScore > dealerScore) && playerStand === true && dealerStand === true){
-      localStorage.setItem("gameEnd", true);
+      localStorage.setItem("roundEnd", true);
 
       //set le nombre de win en local
       localStorage.setItem(
@@ -155,7 +181,7 @@ const scoreTrigger = () => {
     }
     else if(playerScore === 21){
       playerStandElement().removeEventListener("click", deck.playerStand);
-      localStorage.setItem("gameEnd", true);
+      localStorage.setItem("roundEnd", true);
 
       //set le nombre de win en local
       localStorage.setItem(
@@ -167,6 +193,22 @@ const scoreTrigger = () => {
       alert("blackjack 🃏");
 
       leaderboard.getBlackJackResult();
+    }
+
+    if(JSON.parse(localStorage.getItem('roundEnd')) === true){
+        func.disabledElementById('playerStand', true);
+        const { remaining } = await deck.getDeckInfo();
+        if(remaining > 3){
+            newRoundElement().addEventListener('click', newRound, { once: true });
+            func.hideElementById('nextRound', false);
+            func.disabledElementById('nextRound', false)
+        }
+        else{
+            alert('game end !');
+            localStorage.setItem('gameEnd', true);
+            deck.checkDeck();
+        }
+        save();
     }
 }
 
