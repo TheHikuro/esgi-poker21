@@ -1,6 +1,6 @@
 import { deck } from '../deck/index.js';
 import { user } from '../user/index.js'
-import { func, modalWin } from '../generic/index.js';
+import { func, modalLead } from "../generic/index.js";
 import { navbar, player } from './index.js'
 import { leaderboard } from "../leaderboard/index.js";
 import { vibration } from "../api/index.js";
@@ -8,7 +8,8 @@ import { vibration } from "../api/index.js";
 const newGameElement = func.getDynamicElementById('newGame');
 const stopGameElement = func.getDynamicElementById('stopGame');
 const shuffleElement = func.getDynamicElementById('shuffleDeck');
-const modalElement = func.getDynamicElementById('modalTest');
+const modalElement = func.getDynamicElementById("btn-modalLead");
+const modalElementClose = func.getDynamicElementById("modal-close");
 const playerStandElement = func.getDynamicElementById('playerStand');
 
 // Add start EventListener
@@ -20,11 +21,30 @@ const init = async () => {
         user.init();
         navbar.init();
         player.init();
-        leaderboard.init();
+
+        // version mobile
+        if (func.isMobile()) {
+
+          func.hideElementById("board-container", true);
+          func.hideElementById("btn-modalLead", false);
+
+          //modal leaderboard load
+          modalLead();
+          func.hideElementById("modal", true);
+
+          modalElement().addEventListener("click", () => {
+            func.hideElementById("modal", false);
+          });
+
+        // version desktop
+        }else{
+
+            func.hideElementById("btn-modalLead", true);
+            leaderboard.init();
+
+        }
+
         newGameElement().addEventListener('click', start , { once: true });
-        modalElement().addEventListener('click', () => {
-            modalWin();
-        });
     }
 }
 
@@ -36,6 +56,7 @@ const start = async () => {
   func.hideElementById("stopGame", false);
   func.disabledElementById("stopGame", true);
   deck.init();
+  func.disabledElementById("btn-modalLead", false);
 }
 
 // Stop game and update navbar buttons
@@ -98,7 +119,12 @@ const loadSave = async () => {
             case shuffleElement().disabled:
                 shuffleElement().addEventListener('click', shuffle, { once: true });
             case modalElement().disabled:
-                modalElement().addEventListener('click', modalWin)
+                modalElement().addEventListener("click", () => {
+                  func.hideElementById("modal", false);
+                });
+                modalElementClose().addEventListener("click", () => {
+                  modal.style.display = "none";
+                });
         }
 
         if(!playerStandElement().disabled && JSON.parse(localStorage.getItem('playerStand')) != true && JSON.parse(localStorage.getItem('gameEnd')) != true){
@@ -135,7 +161,7 @@ const scoreTrigger = () => {
         );
 
         vibration.vibrationLose();
-        alert('loose 😒');
+        alert("loose 😒");
 
         leaderboard.getLooseResult(playerScore, dealerScore);
     }
@@ -149,7 +175,7 @@ const scoreTrigger = () => {
       );
 
       vibration.vibrationWin();
-      alert("win 😊");
+        alert("win 😊");
 
       leaderboard.getWinResult(playerScore, dealerScore);
     }
