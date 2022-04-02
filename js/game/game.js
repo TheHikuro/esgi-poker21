@@ -164,6 +164,8 @@ const scoreTrigger = () => {
         alert("loose 😒");
 
         leaderboard.getLooseResult(playerScore, dealerScore);
+
+        save();
     }
     else if((dealerScore > 21 || playerScore > dealerScore) && playerStand === true && dealerStand === true){
       localStorage.setItem("gameEnd", true);
@@ -178,6 +180,8 @@ const scoreTrigger = () => {
         alert("win 😊");
 
       leaderboard.getWinResult(playerScore, dealerScore);
+
+      save();
     }
     else if(playerScore === 21){
       playerStandElement().removeEventListener("click", deck.playerStand);
@@ -193,6 +197,8 @@ const scoreTrigger = () => {
       alert("blackjack 🃏");
 
       leaderboard.getBlackJackResult();
+
+      save();
     }
 }
 
