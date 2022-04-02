@@ -69,4 +69,14 @@ const splitArrayInLetters = (array) => {
     return letters;
 }
 
-export { createHtmlElement, getCardValues, disabledElementById, hideElementById, getDynamicElementById, getDyncamicElementLastChildById, sleep, splitArrayInLetters, haveDeckId }
+const isMobile = () => {
+  if (window.matchMedia("(min-width: 420px)").matches) {
+    /* largeur d'au moins 420px */
+    return false;
+  } else {
+    /* largeur de moins de 420px */
+    return true;
+  }
+};
+
+export { createHtmlElement, getCardValues, disabledElementById, hideElementById, getDynamicElementById, getDyncamicElementLastChildById, sleep, splitArrayInLetters, haveDeckId, isMobile }
