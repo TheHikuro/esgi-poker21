@@ -102,7 +102,8 @@
   height: 50%;
   width: 50%;
   border-radius: 5px;
-  z-index: 100;
+  z-index: 1000 !important;
+  transition: all .4s;
 }
 
 .modal-body {
@@ -111,6 +112,8 @@
   width: auto;
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .backContainer {
