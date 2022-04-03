@@ -45,7 +45,16 @@ const buttons = {
                 disabled: false,
                 hide: true
             } 
-        }
+        },
+        {
+            value: 'Next Round',
+            id: 'nextRound',
+            class: 'btn',
+            rules: {
+                disabled: true,
+                hide: true
+            } 
+        }    
     ]
 }
 
