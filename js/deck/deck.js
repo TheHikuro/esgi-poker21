@@ -47,7 +47,7 @@ const init = async () => {
         card_inner.append(card_back, card_front);
         card_back.src = cardBackSrc;
 
-        card.style.margin = `${i * -0.3}px 0 0 ${i * -0.2}px`;
+        card.style.margin = `${i * -0.6}px 0 0 ${i * -0.2}px`;
         deckAreaElement().append(card);
         anim.createDeck(card, 'generate-deck-pile', `${i / remaining}s`);
     }

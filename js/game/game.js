@@ -1,10 +1,11 @@
 import { deck } from '../deck/index.js';
 import { user } from '../user/index.js'
 import { func, modalLead } from "../generic/index.js";
-import { navbar, player } from './index.js'
+import { game, navbar, player } from './index.js'
 import { leaderboard } from "../leaderboard/index.js";
 import { vibration } from "../api/index.js";
 import { api } from '../api/index.js';
+import { anim } from '../animations/index.js';
 
 const newGameElement = func.getDynamicElementById('newGame');
 const stopGameElement = func.getDynamicElementById('stopGame');
@@ -16,10 +17,10 @@ const newRoundElement = func.getDynamicElementById('nextRound');
 
 // Add start EventListener
 const init = async () => {
-    if(func.haveDeckId() && localStorage.getItem('gameState')){
+    if (func.haveDeckId() && localStorage.getItem('gameState')) {
         await loadSave();
     }
-    else{
+    else {
         user.init();
         navbar.init();
         player.init();
@@ -91,7 +92,7 @@ const reset = async () => {
     localStorage.setItem("nbWin", score_win);
     localStorage.setItem("nbBlackJackWin", score_black_jack);
     localStorage.setItem("nbLoose", score_loose);
-    
+
     deck.reset();
     func.hideElementById('newGame', true);
     func.hideElementById('stopGame', false);
@@ -121,8 +122,8 @@ const save = () => {
 
 // Load html state page
 const loadSave = async () => {
-    if(localStorage.getItem('gameState')){
-        window.document.body.outerHTML =  localStorage.getItem('gameState');
+    if (localStorage.getItem('gameState')) {
+        window.document.body.outerHTML = localStorage.getItem('gameState');
         window.document.getElementById('deck').innerHTML = null;
         await func.sleep(250);
         window.document.getElementById('username').parentNode.addEventListener('click', user.logout, false);
@@ -172,14 +173,14 @@ const scoreTrigger = async () => {
     const dealerStand = JSON.parse(localStorage.getItem('dealerStand'));
     const playerTurn = JSON.parse(localStorage.getItem('playerTurn'));
 
-    if(playerScore > 21 && playerTurn === true || dealerScore > playerScore && dealerScore <= 21 && playerStand === true && dealerStand == true){
+    if (playerScore > 21 && playerTurn === true || dealerScore > playerScore && dealerScore <= 21 && playerStand === true && dealerStand == true) {
         playerStandElement().removeEventListener('click', deck.playerStand);
         localStorage.setItem('roundEnd', true);
 
         //set le nombre de loose en local
         localStorage.setItem(
-          "nbLoose",
-          JSON.parse(localStorage.getItem("nbLoose")) + 1
+            "nbLoose",
+            JSON.parse(localStorage.getItem("nbLoose")) + 1
         );
 
         vibration.vibrationLose();
@@ -188,7 +189,7 @@ const scoreTrigger = async () => {
             api.drawCardFromDeck(localStorage.getItem('deckId'), 1);
         }
 
-        alert('loose 😒');
+        anim.winAnimation('lose')
 
         leaderboard.getLooseResult(playerScore, dealerScore);
 
@@ -197,14 +198,14 @@ const scoreTrigger = async () => {
     else if((dealerScore > 21 || playerScore > dealerScore) && playerStand === true && dealerStand === true){
       localStorage.setItem("roundEnd", true);
 
-      //set le nombre de win en local
-      localStorage.setItem(
-        "nbWin",
-        JSON.parse(localStorage.getItem("nbWin")) + 1
-      );
+        //set le nombre de win en local
+        localStorage.setItem(
+            "nbWin",
+            JSON.parse(localStorage.getItem("nbWin")) + 1
+        );
 
       vibration.vibrationWin();
-        alert("win 😊");
+      anim.winAnimation('win')
 
       leaderboard.getWinResult(playerScore, dealerScore);
 
@@ -214,14 +215,14 @@ const scoreTrigger = async () => {
       playerStandElement().removeEventListener("click", deck.playerStand);
       localStorage.setItem("roundEnd", true);
 
-      //set le nombre de win en local
-      localStorage.setItem(
-        "nbBlackJackWin",
-        JSON.parse(localStorage.getItem("nbBlackJackWin")) + 1
-      );
+        //set le nombre de win en local
+        localStorage.setItem(
+            "nbBlackJackWin",
+            JSON.parse(localStorage.getItem("nbBlackJackWin")) + 1
+        );
 
       vibration.vibrationWin();
-      alert("blackjack 🃏");
+      anim.winAnimation('blackjack')
 
       leaderboard.getBlackJackResult();
 

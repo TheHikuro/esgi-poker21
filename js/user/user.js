@@ -10,13 +10,26 @@ switch (window.location.pathname) {
         break;
 }
 
+const options = () => {
+    const soundOn = func.createHtmlElement('img', 'soundOn', ['soundOn'])
+    const soundOff = func.createHtmlElement('img', 'soundOff', ['soundOff'])
+
+    soundOn.src = '../assets/img/soundOn.png';
+    soundOff.src = '../assets/img/soundOff.png';
+}
+
 // Init user, set username, set logout button
 const init = () => {
     const myUsername = window.document.getElementById('username');
-    const myNewUsername = func.createHtmlElement('span');
-    myUsername.parentNode.addEventListener('click', logout, false);
-    myNewUsername.innerHTML = localStorage.getItem('username');
-    myUsername.appendChild(myNewUsername);
+    myUsername.innerHTML = localStorage.getItem('username');
+    myUsername.addEventListener('click', logout);
+    myUsername.onmouseover = () => {
+        myUsername.innerHTML = 'Logout 🏃‍♂️';
+        myUsername.onmouseleave = () => {
+            myUsername.innerHTML = localStorage.getItem('username');
+        }
+    }
+    options();
 }
 
 // Logout user
@@ -24,4 +37,4 @@ const logout = () => {
     window.location.href = '../index.html';
 }
 
-export { init, logout }
+export { init }

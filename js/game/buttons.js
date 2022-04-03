@@ -19,7 +19,7 @@ const buttons = {
             }
         },
         {
-            value: 'Shuffle Deck',
+            value: 'Shuffle',
             id: 'shuffleDeck',
             class: 'btn',
             rules: {
