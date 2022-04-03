@@ -251,10 +251,6 @@ const playerFlipCard = async () => {
     const drawCard = await api.drawCardFromDeck(deckId, 1);
     const cardValues = func.getCardValues(drawCard[0].code);
 
-    if(cardValues.length > 1){
-        // Player chooses the value
-        alert(cardValues);
-    }
 
     localStorage.setItem('playerScore', JSON.parse(localStorage.getItem('playerScore')) + cardValues[0]);
     const score = localStorage.getItem('playerScore');
