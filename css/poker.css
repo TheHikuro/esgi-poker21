@@ -278,7 +278,7 @@ body {
   width: 15%;
   height: 100%;
   min-width: 15%;
-  background: rgba(245, 30, 30, 0.336);
+  /* background: rgba(245, 30, 30, 0.336); */
 }
 
 @media screen and (max-width: 450px) {

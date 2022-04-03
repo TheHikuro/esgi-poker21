@@ -1,7 +1,7 @@
 import { deck } from '../deck/index.js';
 import { user } from '../user/index.js'
 import { func, modalLead } from "../generic/index.js";
-import { navbar, player } from './index.js'
+import { game, navbar, player } from './index.js'
 import { leaderboard } from "../leaderboard/index.js";
 import { vibration } from "../api/index.js";
 import { api } from '../api/index.js';
@@ -242,9 +242,7 @@ const scoreTrigger = async () => {
             localStorage.setItem('gameEnd', true);
             deck.checkDeck();
         }
-        vibration.vibrationWin();
-
-        leaderboard.getBlackJackResult();
+        save();
     }
 }
 
