@@ -27,12 +27,12 @@ const buttons = {
                 hide: false
             }
         }, {
-            value: 'Modal',
-            id: 'modalTest',
+            value: 'Leaderboard',
+            id: 'btn-modalLead',
             class: 'btn',
             rules: {
-                disabled: false,
-                hide: false
+                disabled: true,
+                hide: true
             }
         }
     ],

@@ -1,3 +1,6 @@
+/* 
+* webkit scrollbar 
+*/
 ::-webkit-scrollbar {
   width: 5px;
 }
@@ -7,7 +10,7 @@
   box-shadow: inset 0 0 5px grey; 
   border-radius: 10px;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #45a173; 
@@ -18,20 +21,14 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #45a173; 
 }
+/* 
+* end webkit scrollbar 
+*/
 
-.info-score{
-    width: 100%;
-    height: 20%;
-}
 
-.info-history{
-    width: 100%;
-    height: 500px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
 
-.score-title{
+
+.score-title, .score-history{
     font-size: 22px;
     text-align: center;
     text-decoration: underline;
@@ -49,7 +46,7 @@
 }
 
 .score-win, .score-lose, .score-blackjack{
-    font-size: 14px;
+    font-size: 12px;
     text-align: center;
     font-weight: normal;
 }
@@ -70,4 +67,74 @@
     color: tomato;
     margin-left: 5px;
     margin-right: 5px;
+}
+
+
+
+
+
+/* 
+* version mobile
+*/
+@media only screen and (max-width: 420px)
+{
+  .info-score{
+      width: 100%;
+  }
+
+  .info-history{
+      width: 100%;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      height: 150px;
+  }
+
+  .score-win, .score-lose, .score-blackjack{
+    font-size: 12px;
+  }
+
+  .score-title, .score-history{
+    font-size: 18px;
+  }
+
+  .title-win, .title-lose, .title-blackjack{
+    font-size: 14px;
+  }
+
+  .info-lose, .info-blackjack, .info-win{
+    font-size: 12px;
+  }
+}
+
+
+
+
+/* 
+* version desktop
+*/
+@media only screen and (min-width: 421px)
+{
+  .info-score{
+      width: 100%;
+      height: 20%;
+  }
+
+  .info-history{
+      width: 100%;
+      height: 500px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+  }
+
+  .score-win, .score-lose, .score-blackjack{
+    font-size: 14px;
+  }
+
+  .score-title, .score-history{
+    font-size: 22px;
+  }
+
+  .title-win, .title-lose, .title-blackjack{
+    font-size: 16px;
+  }
 }

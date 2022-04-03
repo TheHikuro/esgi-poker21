@@ -1,6 +1,6 @@
 import { deck } from '../deck/index.js';
 import { user } from '../user/index.js'
-import { func, modalWin } from '../generic/index.js';
+import { func, modalLead } from "../generic/index.js";
 import { navbar, player } from './index.js'
 import { leaderboard } from "../leaderboard/index.js";
 import { vibration } from "../api/index.js";
@@ -9,7 +9,8 @@ import { api } from '../api/index.js';
 const newGameElement = func.getDynamicElementById('newGame');
 const stopGameElement = func.getDynamicElementById('stopGame');
 const shuffleElement = func.getDynamicElementById('shuffleDeck');
-const modalElement = func.getDynamicElementById('modalTest');
+const modalElement = func.getDynamicElementById("btn-modalLead");
+const modalElementClose = func.getDynamicElementById("modal-close");
 const playerStandElement = func.getDynamicElementById('playerStand');
 const newRoundElement = func.getDynamicElementById('nextRound');
 
@@ -22,11 +23,30 @@ const init = async () => {
         user.init();
         navbar.init();
         player.init();
-        leaderboard.init();
+
+        // version mobile
+        if (func.isMobile()) {
+
+          func.hideElementById("board-container", true);
+          func.hideElementById("btn-modalLead", false);
+
+          //modal leaderboard load
+          modalLead();
+          func.hideElementById("modal", true);
+
+          modalElement().addEventListener("click", () => {
+            func.hideElementById("modal", false);
+          });
+
+        // version desktop
+        }else{
+
+            func.hideElementById("btn-modalLead", true);
+            leaderboard.init();
+
+        }
+
         newGameElement().addEventListener('click', start , { once: true });
-        modalElement().addEventListener('click', () => {
-            modalWin();
-        });
     }
 }
 
@@ -38,6 +58,7 @@ const start = async () => {
   func.hideElementById("stopGame", false);
   func.disabledElementById("stopGame", true);
   deck.init();
+  func.disabledElementById("btn-modalLead", false);
 }
 
 // Stop game and update navbar buttons
@@ -117,7 +138,12 @@ const loadSave = async () => {
             shuffleElement().addEventListener('click', shuffle, { once: true }); 
         }
         if(!modalElement().disabled){
-            modalElement().addEventListener('click', modalWin, { once: true }); 
+            modalElement().addEventListener("click", () => {
+              func.hideElementById("modal", false);
+            });
+            modalElementClose().addEventListener("click", () => {
+              modal.style.display = "none";
+            });
         }
         if(!newRoundElement().disabled){
             newRoundElement().addEventListener('click', newRound, { once: true }); 
@@ -157,6 +183,7 @@ const scoreTrigger = async () => {
         );
 
         vibration.vibrationLose();
+
         if(playerScore > 21 && playerTurn === true){
             api.drawCardFromDeck(localStorage.getItem('deckId'), 1);
         }
@@ -164,6 +191,8 @@ const scoreTrigger = async () => {
         alert('loose 😒');
 
         leaderboard.getLooseResult(playerScore, dealerScore);
+
+        save();
     }
     else if((dealerScore > 21 || playerScore > dealerScore) && playerStand === true && dealerStand === true){
       localStorage.setItem("roundEnd", true);
@@ -175,9 +204,11 @@ const scoreTrigger = async () => {
       );
 
       vibration.vibrationWin();
-      alert("win 😊");
+        alert("win 😊");
 
       leaderboard.getWinResult(playerScore, dealerScore);
+
+      save();
     }
     else if(playerScore === 21){
       playerStandElement().removeEventListener("click", deck.playerStand);
@@ -193,6 +224,8 @@ const scoreTrigger = async () => {
       alert("blackjack 🃏");
 
       leaderboard.getBlackJackResult();
+
+      save();
     }
 
     if(JSON.parse(localStorage.getItem('roundEnd')) === true){

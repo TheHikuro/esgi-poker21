@@ -3,6 +3,7 @@ import { func } from "../generic/index.js";
 const init = () => {
   const boardAreaElement = func.getDynamicElementById("board-container");
 
+  
   //leaderboard
   const info_score = func.createHtmlElement("div", "info-score", [
     "info-score",
@@ -64,8 +65,8 @@ const init = () => {
 
   boardAreaElement().appendChild(info_score);
   boardAreaElement().appendChild(info_history);
-};
 
+};
 
 
 //affiche le résultat d'un black jack dans l'historique
@@ -148,7 +149,6 @@ const getLooseResult = (playerScore, dealerScore) => {
   info_history().appendChild(info_loose);
   info_history().appendChild(hr);
 };
-
 
 
 export { init, getBlackJackResult, getLooseResult, getWinResult };
