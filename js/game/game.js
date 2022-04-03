@@ -5,6 +5,7 @@ import { navbar, player } from './index.js'
 import { leaderboard } from "../leaderboard/index.js";
 import { vibration } from "../api/index.js";
 import { api } from '../api/index.js';
+import { anim } from '../animations/index.js';
 
 const newGameElement = func.getDynamicElementById('newGame');
 const stopGameElement = func.getDynamicElementById('stopGame');
@@ -188,7 +189,7 @@ const scoreTrigger = async () => {
             api.drawCardFromDeck(localStorage.getItem('deckId'), 1);
         }
 
-        alert('loose 😒');
+        anim.winAnimation('lose')
 
         leaderboard.getLooseResult(playerScore, dealerScore);
 
@@ -204,7 +205,7 @@ const scoreTrigger = async () => {
       );
 
       vibration.vibrationWin();
-        alert("win 😊");
+      anim.winAnimation('win')
 
       leaderboard.getWinResult(playerScore, dealerScore);
 
@@ -221,7 +222,7 @@ const scoreTrigger = async () => {
       );
 
       vibration.vibrationWin();
-      alert("blackjack 🃏");
+      anim.winAnimation('blackjack')
 
       leaderboard.getBlackJackResult();
 
@@ -241,7 +242,6 @@ const scoreTrigger = async () => {
             localStorage.setItem('gameEnd', true);
             deck.checkDeck();
         }
-        save();
     }
 }
 

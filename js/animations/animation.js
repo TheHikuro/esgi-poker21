@@ -1,3 +1,4 @@
+import { game } from '../game/index.js';
 import { func } from '../generic/index.js';
 
 const myCustomAnimation = (element, nameKeyFrame, time, fillMode, smooth, transform) => {
@@ -93,10 +94,12 @@ const winAnimation = (winOrLose) => {
 
     text.addEventListener('animationend', () => {
         backContainer.remove();
+        game.save()
     })
     imgBlacJack.addEventListener('animationend', () => {
         setTimeout(() => {
             backContainer.remove();
+            game.save();
         } , 1000);
     })
 }

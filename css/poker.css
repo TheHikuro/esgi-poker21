@@ -242,6 +242,7 @@ body {
 .player-buttons {
   display: flex;
   justify-content: end;
+  width: auto;
 }
 
 .deck-count {
