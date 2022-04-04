@@ -47,7 +47,7 @@ const buttons = {
             } 
         },
         {
-            value: 'Next Round',
+            value: 'Next',
             id: 'nextRound',
             class: 'btn',
             rules: {
